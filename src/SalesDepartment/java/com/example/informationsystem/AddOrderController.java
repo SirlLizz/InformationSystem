@@ -8,15 +8,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.informationsystem.MenuController.*;
 
 public class AddOrderController {
 
@@ -41,11 +40,27 @@ public class AddOrderController {
     }
 
     @FXML
-    protected void onAddOrderButtonClick(){
-        ReferenceSystem.addOrder(customer, date.getValue(), Double.parseDouble(price.getText()));
-        System.out.println(ReferenceSystem.browseOrderInformation());
-        Stage stage = (Stage) addOrder.getScene().getWindow();
-        stage.close();
+    private void onAddOrderButtonClick(ActionEvent actionEvent){
+        if(checkPriceToDouble(price.getText()) && checkCustomer()) {
+            ReferenceSystem.addOrder(customer, date.getValue(), Double.parseDouble(price.getText()));
+            System.out.println(ReferenceSystem.browseOrderInformation());
+            Stage stage = (Stage) addOrder.getScene().getWindow();
+            stage.close();
+        }
+    }
+
+    @FXML
+    private void onActionComboBox(ActionEvent actionEvent){
+        for (int i = 0; i < ReferenceSystem.getCustomers().size(); i++) {
+            if (ReferenceSystem.getCustomers().get(i).getName().equals(combo.getValue())) {
+                customer = ReferenceSystem.getCustomers().get(i);
+            }
+        }
+    }
+
+    @FXML
+    private void onAddCustomerClick(ActionEvent actionEvent) throws IOException {
+        AddCustomerController.createAddCustomer();
     }
 
     public void OnShowingComboBox(Event event) {
@@ -54,23 +69,41 @@ public class AddOrderController {
 
     private void setComboBox(){
         List<String> names = new ArrayList<>();
-        names.add("New Customer");
         for (int i = 0; i < ReferenceSystem.getCustomers().size(); i++){
             names.add(ReferenceSystem.getCustomers().get(i).getName());
         }
         combo.setItems(FXCollections.observableArrayList(names));
     }
 
-    public void onActionComboBox(ActionEvent actionEvent) throws IOException {
-        System.out.println(combo.getValue());
-        if(combo.getValue() == "New Customer"){
-            AddCustomerController.createAddCustomer();
-        }else{
-            for (int i = 0; i < ReferenceSystem.getCustomers().size(); i++){
-                if(ReferenceSystem.getCustomers().get(i).getName() == combo.getValue()){
-                    customer = ReferenceSystem.getCustomers().get(i);
-                }
-            }
+    private boolean checkPriceToDouble(String price) {
+        try {
+            Double priceDouble = Double.parseDouble(price);
+            return true;
+        } catch(NumberFormatException e){
+            alertPrice();
         }
+        return false;
+    }
+
+    private void alertPrice() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Price Alert");
+        alert.setHeaderText("Price is incorrect!");
+        alert.showAndWait();
+    }
+
+    private boolean checkCustomer() {
+        if(customer == null){
+            alertCustomer();
+            return false;
+        }
+        return true;
+    }
+
+    private void alertCustomer() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Customer Alert");
+        alert.setHeaderText("Customer is null!");
+        alert.showAndWait();
     }
 }
