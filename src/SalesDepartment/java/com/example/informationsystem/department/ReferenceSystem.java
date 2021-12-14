@@ -1,14 +1,10 @@
-package com.example.informationsystem;
-
-
-import com.example.informationsystem.department.Customer;
-import com.example.informationsystem.department.Order;
+package com.example.informationsystem.department;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReferenceSystem {
+public class ReferenceSystem{
     private static List<Customer> customers = new ArrayList<>();
     private static List<Order> orders = new ArrayList<>();
 
@@ -19,6 +15,18 @@ public class ReferenceSystem {
 
     public static List<Customer> getCustomers(){
         return customers;
+    }
+
+    public static List<Order> getOrders(){
+        return orders;
+    }
+
+    public static void setCustomers(List<Customer> newCustomers){
+        customers = newCustomers;
+    }
+
+    public static void setOrders(List<Order> newOrders){
+        orders = newOrders;
     }
 
     public static void addCustomer(String name, String phoneNumber, String address){

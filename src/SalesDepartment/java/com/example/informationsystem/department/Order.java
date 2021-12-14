@@ -2,10 +2,11 @@ package com.example.informationsystem.department;
 
 import com.example.informationsystem.department.Customer;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 
-public class Order {
+public class Order  implements Serializable {
     static private int nextID = 0;
 
     private int orderID;

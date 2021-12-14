@@ -1,6 +1,8 @@
 package com.example.informationsystem.department;
 
-public class Customer {
+import java.io.Serializable;
+
+public class Customer implements Serializable {
     static private int nextID = 0;
 
     private final int customerID;

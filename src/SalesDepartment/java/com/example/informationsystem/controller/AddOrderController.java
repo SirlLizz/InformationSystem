@@ -1,21 +1,18 @@
-package com.example.informationsystem;
+package com.example.informationsystem.controller;
 
+import com.example.informationsystem.department.ReferenceSystem;
 import com.example.informationsystem.department.Customer;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.informationsystem.MenuController.*;
 
 public class AddOrderController {
 

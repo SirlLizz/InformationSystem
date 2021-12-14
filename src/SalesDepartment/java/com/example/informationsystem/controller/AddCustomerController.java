@@ -1,5 +1,6 @@
-package com.example.informationsystem;
+package com.example.informationsystem.controller;
 
+import com.example.informationsystem.department.ReferenceSystem;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -30,7 +31,7 @@ public class AddCustomerController {
     }
 
     @FXML
-    protected void onAddCustomerButtonClick() throws IOException {
+    protected void onAddCustomerButtonClick() {
         ReferenceSystem.addCustomer(fullName.getText(), telephone.getText(), address.getText());
         System.out.println(ReferenceSystem.browseCustomerInformation());
         Stage stage = (Stage) addCustomer.getScene().getWindow();

@@ -14,4 +14,6 @@ module com.example.informationsystem {
     exports com.example.informationsystem;
     exports com.example.informationsystem.department;
     opens com.example.informationsystem.department to javafx.fxml;
+    exports com.example.informationsystem.controller;
+    opens com.example.informationsystem.controller to javafx.fxml;
 }
