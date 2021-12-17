@@ -10,10 +10,14 @@ module com.example.informationsystem {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
 
-    opens com.example.informationsystem to javafx.fxml;
-    exports com.example.informationsystem;
-    exports com.example.informationsystem.department;
-    opens com.example.informationsystem.department to javafx.fxml;
-    exports com.example.informationsystem.controller;
-    opens com.example.informationsystem.controller to javafx.fxml;
+    opens informatinsystem to javafx.fxml;
+    exports informatinsystem;
+    exports informatinsystem.department;
+    opens informatinsystem.department to javafx.fxml;
+    opens informatinsystem.controller to javafx.fxml;
+    exports informatinsystem.view;
+    opens informatinsystem.view to javafx.fxml;
+    exports informatinsystem.controller;
+    exports informatinsystem.view.listener;
+    opens informatinsystem.view.listener to javafx.fxml;
 }
