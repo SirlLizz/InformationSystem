@@ -2,8 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane prefHeight="184.0" prefWidth="260.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="informatinsystem.view.listener.AddOrderListener">
+<AnchorPane prefHeight="184.0" prefWidth="260.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <GridPane layoutX="14.0" layoutY="14.0" prefHeight="129.0" prefWidth="232.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="105.0" minWidth="10.0" prefWidth="71.0"/>
@@ -19,12 +18,10 @@
         <Label text="Customer" GridPane.rowIndex="1"/>
         <Label text="Price" GridPane.rowIndex="2"/>
         <DatePicker fx:id="date" editable="false" GridPane.columnIndex="1"/>
-        <ComboBox fx:id="combo" onAction="#onActionComboBox" onShowing="#OnShowingComboBox" prefHeight="25.0"
-                  prefWidth="110.0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-        <Button alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false"
-                onAction="#onAddCustomerClick" prefHeight="25.0" prefWidth="38.0" text="Add"
+        <ComboBox fx:id="combo" prefHeight="25.0" prefWidth="110.0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Button fx:id="addCustomer" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false"
+                prefHeight="25.0" prefWidth="38.0" text="Add"
                 GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
     </GridPane>
-    <Button fx:id="addOrder" layoutX="104.0" layoutY="143.0" mnemonicParsing="false" onAction="#onAddOrderButtonClick"
-            text="Add"/>
+    <Button fx:id="addOrder" layoutX="104.0" layoutY="143.0" mnemonicParsing="false" text="Add"/>
 </AnchorPane>

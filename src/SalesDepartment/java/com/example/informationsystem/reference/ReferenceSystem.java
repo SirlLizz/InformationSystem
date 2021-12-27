@@ -1,4 +1,7 @@
-package informatinsystem.department;
+package com.example.informationsystem.reference;
+
+import com.example.informationsystem.model.Customer;
+import com.example.informationsystem.model.Order;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -65,12 +68,26 @@ public class ReferenceSystem{
         customers.add(new Customer(name, phoneNumber, address));
     }
 
-    public void addOrder(Customer customer, LocalDate date, double orderPrice){
-        orders.add(new Order(customer, date, orderPrice));
-    }
-
     public void removeCustomer(int customerID){
         customers.remove(customerID);
+    }
+
+    public void changeCustomerInformation(int customerID, String name, String phoneNumber, String address){
+        customers.get(customerID).setName(name);
+        customers.get(customerID).setPhoneNumber(phoneNumber);
+        customers.get(customerID).setAddress(address);
+    }
+
+    public String browseCustomerInformation(){
+        String out = "";
+        for(int i = 0; i<customers.size();i++){
+            out += customers.get(i).toString() + "\n";
+        }
+        return out;
+    }
+
+    public void addOrder(Customer customer, LocalDate date, double orderPrice){
+        orders.add(new Order(customer, date, orderPrice));
     }
 
     public void removeOrder(int orderID){
@@ -83,28 +100,6 @@ public class ReferenceSystem{
         orders.get(orderID).setOrderPrice(orderPrice);
     }
 
-    public void changeCustomerInformation(int customerID, String name, String phoneNumber, String address){
-        customers.get(customerID).setName(name);
-        customers.get(customerID).setPhoneNumber(phoneNumber);
-        customers.get(customerID).setAddress(address);
-    }
-
-    public void clearCustomers(){
-        customers = new ArrayList<>();
-    }
-
-    public void clearOrders(){
-        orders = new ArrayList<>();
-    }
-
-    public String browseCustomerInformation(){
-        String out = "";
-        for(int i = 0; i<customers.size();i++){
-            out += customers.get(i).toString() + "\n";
-        }
-        return out;
-    }
-
     public String browseOrderInformation(){
         String out = "";
         for(int i = 0; i<orders.size();i++){
@@ -112,4 +107,5 @@ public class ReferenceSystem{
         }
         return out;
     }
+    
 }

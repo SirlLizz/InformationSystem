@@ -3,8 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AddCustomer" prefHeight="180.0" prefWidth="260.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="informatinsystem.view.listener.AddCustomerListener">
+<AnchorPane prefHeight="180.0" prefWidth="260.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <Pane layoutX="14.0" layoutY="14.0" prefHeight="154.0" prefWidth="233.0">
       <Label layoutX="4.0" layoutY="19.0" prefHeight="17.0" prefWidth="56.0" text="Full name"/>
       <Label layoutX="4.0" layoutY="54.0" text="Telephone"/>
@@ -12,6 +11,6 @@
       <TextField fx:id="fullName" layoutX="67.0" layoutY="15.0"/>
       <TextField fx:id="telephone" layoutX="67.0" layoutY="50.0"/>
       <TextField fx:id="address" layoutX="67.0" layoutY="86.0"/>
-      <Button fx:id="addCustomer" layoutX="91.0" layoutY="120.0" mnemonicParsing="false" onAction="#onAddCustomerButtonClick" text="Add"/>
+      <Button fx:id="addCustomer" layoutX="91.0" layoutY="120.0" mnemonicParsing="false" text="Add"/>
    </Pane>
 </AnchorPane>

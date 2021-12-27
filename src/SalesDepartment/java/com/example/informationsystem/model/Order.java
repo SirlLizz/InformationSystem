@@ -1,4 +1,4 @@
-package informatinsystem.department;
+package com.example.informationsystem.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
