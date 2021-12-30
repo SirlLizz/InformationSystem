@@ -41,6 +41,10 @@ public class Customer implements Serializable {
         address = newAddress;
     }
 
+    public int getCustomerID(){
+        return customerID;
+    }
+
     public String toString(){
         return "ID: " + customerID + "; Name: " + name + "; Phone: " + phoneNumber + "; Address: " + address;
     }

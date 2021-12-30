@@ -36,8 +36,13 @@ public class Order  implements Serializable {
         orderPrice = newOrderPrice;
     }
 
+    public int getOrderID(){
+        return orderID;
+    }
+
+
     public Order(Customer customer, LocalDate orderDate, double orderPrice){
-        orderID = nextID++;
+        this.orderID = nextID++;
         this.customer = customer;
         this.orderDate = orderDate;
         this.orderPrice = orderPrice;

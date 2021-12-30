@@ -10,9 +10,9 @@ import java.util.List;
 
 public class Serialization{
 
-    public void serialize (List order, File path){
+    public void serialize (List order, File file){
         try{
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path));
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
             out.writeObject(order);
             out.close();
         }
@@ -21,9 +21,9 @@ public class Serialization{
         }
     }
 
-    public List<Order> deserializeOrder (File path){
+    public List<Order> deserializeOrder (File file){
         try{
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(path));
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
             List<Order> read = (List<Order>)in.readObject();
             in.close();
             return read;
@@ -34,9 +34,9 @@ public class Serialization{
         return null;
     }
 
-    public List<Customer> deserializeCustomer (File path) {
+    public List<Customer> deserializeCustomer (File file) {
         try{
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(path));
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
             List<Customer> read = (List<Customer>)in.readObject();
             in.close();
             return read;
