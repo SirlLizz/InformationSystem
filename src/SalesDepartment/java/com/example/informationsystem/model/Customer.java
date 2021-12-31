@@ -45,6 +45,10 @@ public class Customer implements Serializable {
         return customerID;
     }
 
+    public static void setNextID(int newID){
+        nextID = newID;
+    }
+
     public String toString(){
         return "ID: " + customerID + "; Name: " + name + "; Phone: " + phoneNumber + "; Address: " + address;
     }

@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReferenceSystem{
-    private List<Customer> customers = new ArrayList<>();
-    private List<Order> orders = new ArrayList<>();
+    private List<Customer> customers;
+    private List<Order> orders;
 
     public ReferenceSystem(){
-        customers = new ArrayList<Customer>();
-        orders = new ArrayList<Order>();
+        customers = new ArrayList<>();
+        orders = new ArrayList<>();
     }
 
     public List<Customer> getCustomers(){
@@ -32,50 +32,68 @@ public class ReferenceSystem{
         orders = newOrders;
     }
 
-    public boolean checkCustomer(Customer customer){
-        int k = 0;
+    public int checkCustomer(Customer customer){
+        int k = -1;
         for (int i = 0; i< customers.size();i++){
             if((customers.get(i).getName().equals(customer.getName()))&&
                     (customers.get(i).getAddress().equals(customer.getAddress()))&&
                     (customers.get(i).getPhoneNumber().equals(customer.getPhoneNumber()))){
-                k++;
+                k=i;
             }
         }
-        if(k==0){
-            return true;
-        }
-        return false;
+        return k;
     }
 
-    public boolean checkOrder(Order order){
-        int k = 0;
+    public int checkOrder(Order order){
+        int k = -1;
         for (int i = 0; i< orders.size();i++){
             if((orders.get(i).getOrderDate().equals(order.getOrderDate()))&&
                     (orders.get(i).getOrderPrice() == order.getOrderPrice())&&
                     (orders.get(i).getCustomer().getAddress().equals(order.getCustomer().getAddress()))&&
                     (orders.get(i).getCustomer().getPhoneNumber().equals(order.getCustomer().getPhoneNumber()))&&
                     (orders.get(i).getCustomer().getName().equals(order.getCustomer().getName()))){
-                k++;
+                k = i;
             }
         }
-        if(k==0){
-            return true;
-        }
-        return false;
+        return k;
     }
 
     public void addCustomer(String name, String phoneNumber, String address){
         customers.add(new Customer(name, phoneNumber, address));
     }
 
+    public Customer getCustomerFromID(int customerID){
+        for (int i = 0; i<customers.size();i++){
+            if(customers.get(i).getCustomerID() == customerID){
+                return customers.get(i);
+            }
+        }
+        return null;
+    }
+
     public void removeCustomer(int customerID){
-        customers.remove(customerID);
+        for(int i =0; i< customers.size();i++){
+            if(customers.get(i).getCustomerID() == customerID){
+                for(int j =0; j< orders.size();j++){
+                    if(orders.get(j).getCustomer().getCustomerID() == customerID){
+                        orders.remove(j);
+                        j--;
+                    }
+                }
+                customers.remove(i);
+            }
+        }
     }
 
     public void changeCustomerInformation(int customerID, String name, String phoneNumber, String address){
-        customers.get(customerID).setName(name);
-        customers.get(customerID).setPhoneNumber(phoneNumber);
-        customers.get(customerID).setAddress(address);
+        for(int i =0; i< customers.size();i++){
+            if(customers.get(i).getCustomerID() == customerID){
+                customers.get(i).setName(name);
+                customers.get(i).setPhoneNumber(phoneNumber);
+                customers.get(i).setAddress(address);
+            }
+        }
+
     }
 
     public String browseCustomerInformation(){
@@ -90,8 +108,21 @@ public class ReferenceSystem{
         orders.add(new Order(customer, date, orderPrice));
     }
 
+    public Order getOrderFromID(int orderID){
+        for (int i = 0; i<orders.size();i++){
+            if(orders.get(i).getOrderID() == orderID){
+                return orders.get(i);
+            }
+        }
+        return null;
+    }
+
     public void removeOrder(int orderID){
-        orders.remove(orderID);
+        for(int i =0; i< orders.size();i++){
+            if(orders.get(i).getOrderID() == orderID){
+                orders.remove(i);
+            }
+        }
     }
 
     public void changeOrderInformation(int orderID, Customer customer, LocalDate orderDate, double orderPrice){

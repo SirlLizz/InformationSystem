@@ -7,10 +7,8 @@ import com.example.informationsystem.reference.ReferenceSystem;
 import com.example.informationsystem.reference.Serialization;
 import com.example.informationsystem.view.AddCustomerView;
 import com.example.informationsystem.view.AddOrderView;
-import com.example.informationsystem.view.MenuView;
-import javafx.application.Application;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
+import com.example.informationsystem.view.ChangeCustomerView;
+import com.example.informationsystem.view.ChangeOrderView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,9 +24,27 @@ public class MenuController{
         addCust.showStage();
     }
 
+    public void deleteCustomerClick(ReferenceSystem department, int customerID){
+        department.removeCustomer(customerID);
+    }
+
+    public void changeCustomerClick(ReferenceSystem department, int customerID){
+        ChangeCustomerView changeCust = new ChangeCustomerView(department, customerID);
+        changeCust.showStage();
+    }
+
     public void addOrderClick(ReferenceSystem department){
         AddOrderView addOrd = new AddOrderView(department);
         addOrd.showStage();
+    }
+
+    public void deleteOrderClick(ReferenceSystem department, int orderID){
+        department.removeOrder(orderID);
+    }
+
+    public void changeOrderClick(ReferenceSystem department, int orderID){
+        ChangeOrderView changeOrd = new ChangeOrderView(department, orderID);
+        changeOrd.showStage();
     }
 
     public void serializeOrder(ReferenceSystem department, File file){
@@ -37,24 +53,28 @@ public class MenuController{
 
     public void openOrder(ReferenceSystem department, File file){
         List<Order> orders = serialization.deserializeOrder(file);
-        List<Customer> customers = new ArrayList<>();
         department.setCustomers(new ArrayList<>());
         department.setOrders(new ArrayList<>());
+        Customer.setNextID(0);
+        Order.setNextID(0);
         for (int i = 0; i< orders.size();i++){
-            customers.add(orders.get(i).getCustomer());
-            department.addCustomer(orders.get(i).getCustomer().getName(),orders.get(i).getCustomer().getPhoneNumber(),orders.get(i).getCustomer().getAddress());
-            department.addOrder(orders.get(i).getCustomer(),orders.get(i).getOrderDate(),orders.get(i).getOrderPrice());
+            if(department.checkCustomer(orders.get(i).getCustomer())==-1) {
+                department.addCustomer(orders.get(i).getCustomer().getName(), orders.get(i).getCustomer().getPhoneNumber(), orders.get(i).getCustomer().getAddress());
+            }
+            department.addOrder(department.getCustomers().get(department.getCustomers().size()-1),orders.get(i).getOrderDate(),orders.get(i).getOrderPrice());
         }
     }
 
     public void addOpenOrder(ReferenceSystem department, File file){
         List<Order> orders = serialization.deserializeOrder(file);
         for (int i = 0; i< orders.size();i++){
-            if(department.checkOrder(orders.get(i))){
-                if(department.checkCustomer(orders.get(i).getCustomer())){
+            if(department.checkOrder(orders.get(i)) == -1){
+                if(department.checkCustomer(orders.get(i).getCustomer())==-1){
                     department.addCustomer(orders.get(i).getCustomer().getName(),orders.get(i).getCustomer().getPhoneNumber(),orders.get(i).getCustomer().getAddress());
+                    department.addOrder(department.getCustomers().get(department.getCustomers().size()-1),orders.get(i).getOrderDate(),orders.get(i).getOrderPrice());
+                }else{
+                    department.addOrder(department.getCustomers().get(department.checkCustomer(orders.get(i).getCustomer())),orders.get(i).getOrderDate(),orders.get(i).getOrderPrice());
                 }
-                department.addOrder(orders.get(i).getCustomer(),orders.get(i).getOrderDate(),orders.get(i).getOrderPrice());
             }
         }
     }
@@ -70,7 +90,7 @@ public class MenuController{
     public void addOpenCustomer(ReferenceSystem department, File file) {
         List<Customer> customers = serialization.deserializeCustomer(file);
         for (int i = 0; i< customers.size();i++){
-            if(department.checkCustomer(customers.get(i))){
+            if(department.checkCustomer(customers.get(i)) == -1){
                 department.addCustomer(customers.get(i).getName(),customers.get(i).getPhoneNumber(),customers.get(i).getAddress());
             }
         }

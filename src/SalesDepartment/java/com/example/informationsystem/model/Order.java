@@ -40,6 +40,9 @@ public class Order  implements Serializable {
         return orderID;
     }
 
+    public static void setNextID(int newID){
+        nextID = newID;
+    }
 
     public Order(Customer customer, LocalDate orderDate, double orderPrice){
         this.orderID = nextID++;
@@ -49,6 +52,6 @@ public class Order  implements Serializable {
     }
 
     public String toString(){
-        return "ID: " + orderID + "; Customer: (" + customer.toString() + "); Date: " + orderDate + "; Price: " + orderPrice;
+        return "ID: " + orderID + "; Customer: (" + customer.toString() + "); Date: " + orderDate + "; Price: " + orderPrice + "\n";
     }
 }

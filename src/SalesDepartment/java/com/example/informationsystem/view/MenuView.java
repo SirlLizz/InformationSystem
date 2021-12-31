@@ -67,7 +67,15 @@ public class MenuView {
     @FXML
     private Button addCustomerButton;
     @FXML
+    private Button changeCustomerButton;
+    @FXML
+    private Button deleteCustomerButton;
+    @FXML
     private Button addOrderButton;
+    @FXML
+    private Button changeOrderButton;
+    @FXML
+    private Button deleteOrderButton;
 
 
     ReferenceSystem department = null;
@@ -100,30 +108,69 @@ public class MenuView {
         columnName.setCellValueFactory(new PropertyValueFactory<Customer, String>("name"));
         columnPhone.setCellValueFactory(new PropertyValueFactory<Customer, String>("phoneNumber"));
         columnAddress.setCellValueFactory(new PropertyValueFactory<Customer, String>("address"));
-        addCustomerButton.setOnAction(event -> onCustomerClick());
-        addOrderButton.setOnAction(event -> onOrderClick());
         serializeOrderButton.setOnAction(event -> onSerializeOrderClick());
         openOrderButton.setOnAction(event -> onOpenOrderClick());
-        addOpenOrderButton.setOnAction(event -> onAddOrderClick());
+        addOpenOrderButton.setOnAction(event -> onAddOpenOrderClick());
         serializeCustomerButton.setOnAction(event -> onSerializeCustomerClick());
-        openCustomerButton.setOnAction(event -> onOpenCustomerClick());
-        addOpenCustomerButton.setOnAction(event -> onAddCustomerClick());
+        openCustomerButton.setOnAction(event -> onOpenCustomersClick());
+        addOpenCustomerButton.setOnAction(event -> onAddOpenCustomersClick());
         findDateButton.setOnAction(event -> onFindDateClick());
         findPriceButton.setOnAction(event -> onFindPriceClick());
         findFullNameButton.setOnAction(event -> onFindFullNameClick());
         findNumberButton.setOnAction(event -> onFindNumberClick());
         findAddressButton.setOnAction(event -> onFindAddressClick());
+        addCustomerButton.setOnAction(event -> onAddCustomerClick());
+        changeCustomerButton.setOnAction(event -> onChangeCustomerClick());
+        deleteCustomerButton.setOnAction(event -> onDeleteCustomerClick());
+        addOrderButton.setOnAction(event -> onAddOrderClick());
+        changeOrderButton.setOnAction(event -> onChangeOrderClick());
+        deleteOrderButton.setOnAction(event -> onDeleteOrderClick());
     }
 
-    private void onCustomerClick() {
+    private void onAddCustomerClick() {
         controller.addCustomerClick(department);
         tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
     }
 
-    private void onOrderClick(){
+    private void onDeleteCustomerClick() {
+        TableView.TableViewSelectionModel<Customer> selectionModel = tableCustomer.getSelectionModel();
+        if(selectionModel.getSelectedItem()!=null){
+            controller.deleteCustomerClick(department, selectionModel.getSelectedItem().getCustomerID());
+            tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
+            tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
+        }
+    }
+
+    private void onChangeCustomerClick() {
+        TableView.TableViewSelectionModel<Customer> selectionModel = tableCustomer.getSelectionModel();
+        if(selectionModel.getSelectedItem()!=null){
+            controller.changeCustomerClick(department, selectionModel.getSelectedItem().getCustomerID());
+            tableCustomer.refresh();
+            tableOrder.refresh();
+        }
+    }
+
+    private void onAddOrderClick(){
         controller.addOrderClick(department);
         tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
         tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
+    }
+
+    private void onDeleteOrderClick() {
+        TableView.TableViewSelectionModel<Order> selectionModel = tableOrder.getSelectionModel();
+        if(selectionModel.getSelectedItem()!=null){
+            controller.deleteOrderClick(department, selectionModel.getSelectedItem().getOrderID());
+            tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
+        }
+    }
+
+    private void onChangeOrderClick() {
+        TableView.TableViewSelectionModel<Order> selectionModel = tableOrder.getSelectionModel();
+        if(selectionModel.getSelectedItem()!=null){
+            controller.changeOrderClick(department, selectionModel.getSelectedItem().getOrderID());
+            tableCustomer.refresh();
+            tableOrder.refresh();
+        }
     }
 
     private void onSerializeOrderClick(){
@@ -138,7 +185,7 @@ public class MenuView {
         tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
     }
 
-    private void onAddOrderClick() {
+    private void onAddOpenOrderClick() {
         File file = openDialog("Serialized Order", "*.ord");
         controller.addOpenOrder(department, file);
         tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
@@ -150,13 +197,13 @@ public class MenuView {
         controller.serializeCustomer(department, file);
     }
 
-    private void onOpenCustomerClick() {
+    private void onOpenCustomersClick() {
         File file = openDialog("Serialized Customer", "*.cust");
         controller.openCustomer(department, file);
         tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
     }
 
-    private void onAddCustomerClick() {
+    private void onAddOpenCustomersClick() {
         File file = openDialog("Serialized Customer", "*.cust");
         controller.addOpenCustomer(department, file);
         tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
