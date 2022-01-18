@@ -29,13 +29,14 @@ public class ChangeOrderView {
     private TextField price;
 
     Customer customer = null;
-    ReferenceSystem department = null;
-    int orderID = 0;
-    ChangeOrderController controller = new ChangeOrderController();
+    ReferenceSystem department;
+    int orderID;
+    ChangeOrderController controller;
 
-    public ChangeOrderView(ReferenceSystem department, int orderID){
+    public ChangeOrderView(ReferenceSystem department, int orderID, ChangeOrderController controller){
         this.orderID = orderID;
         this.department = department;
+        this.controller = controller;
         stage = new Stage();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AddOrder.fxml"));
@@ -68,7 +69,7 @@ public class ChangeOrderView {
     private void onChangeOrderButtonClick(){
         if(controller.checkPriceToDouble(price.getText())){
             if(controller.checkCustomer(customer)){
-                controller.changeOrderClick(department, orderID, customer, date.getValue(), Double.parseDouble(price.getText()));
+                controller.changeOrderClick(orderID, customer, date.getValue(), Double.parseDouble(price.getText()));
                 stage.close();
             }else{
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -87,15 +88,15 @@ public class ChangeOrderView {
     }
 
     private void onChangeCustomerClick(){
-        controller.changeCustomerClick(department, customer.getCustomerID());
+        controller.changeCustomerClick(customer.getCustomerID());
     }
 
     private void onActionComboBox(){
-        customer = controller.actionComboBox(department, combo.getValue());
+        customer = controller.actionComboBox(combo.getValue());
     }
 
     private void setComboBox(){
-        combo.setItems(FXCollections.observableArrayList(controller.showComboBox(department)));
+        combo.setItems(FXCollections.observableArrayList(controller.showComboBox()));
     }
 
 }

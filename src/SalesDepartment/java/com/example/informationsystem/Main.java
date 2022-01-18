@@ -5,17 +5,13 @@ import com.example.informationsystem.view.MenuView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class Main extends Application{
+import static javafx.application.Application.launch;
 
-    ReferenceSystem department = new ReferenceSystem();
+public class Main{
 
     public static void main(String[] args){
-        launch(args);
+        ApplicationFacade facade = new ApplicationFacade();
+        facade.start();
     }
 
-    @Override
-    public void start(Stage stage) {
-        MenuView menu = new MenuView(department);
-        menu.showStage();
-    }
 }

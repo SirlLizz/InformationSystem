@@ -29,10 +29,11 @@ public class AddOrderView {
     private TextField price;
 
     Customer customer = null;
-    ReferenceSystem department = null;
-    AddOrderController controller = new AddOrderController();
+    ReferenceSystem department;
+    AddOrderController controller;
 
-    public AddOrderView(ReferenceSystem department){
+    public AddOrderView(ReferenceSystem department, AddOrderController controller){
+        this.controller = controller;
         this.department = department;
         stage = new Stage();
         try {
@@ -60,7 +61,7 @@ public class AddOrderView {
     private void onAddOrderButtonClick(){
         if(controller.checkPriceToDouble(price.getText())){
             if(controller.checkCustomer(customer)){
-                controller.addOrderClick(department, customer, date.getValue(), Double.parseDouble(price.getText()));
+                controller.addOrderClick(customer, date.getValue(), Double.parseDouble(price.getText()));
                 stage.close();
             }else{
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -79,15 +80,15 @@ public class AddOrderView {
     }
 
     private void onAddCustomerClick(){
-        controller.addCustomerClick(department);
+        controller.addCustomerClick();
     }
 
     private void onActionComboBox(){
-        customer = controller.actionComboBox(department, combo.getValue());
+        customer = controller.actionComboBox(combo.getValue());
     }
 
     private void setComboBox(){
-        combo.setItems(FXCollections.observableArrayList(controller.showComboBox(department)));
+        combo.setItems(FXCollections.observableArrayList(controller.showComboBox()));
     }
 
 }

@@ -1,14 +1,26 @@
 package com.example.informationsystem.model;
 
-import java.io.Serializable;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
-public class Customer implements Serializable {
+@XmlType(name = "customer")
+@XmlRootElement
+public class Customer{
     static private int nextID = 0;
 
+    @XmlAttribute(name = "ID")
     private final int customerID;
     private String name;
     private String phoneNumber;
     private String address;
+
+    public Customer(){
+        this.customerID = 0;
+        this.address = null;
+        this.name = null;
+        this.phoneNumber = null;
+    }
 
     public Customer(String name, String phoneNumber, String address){
         customerID = nextID++;

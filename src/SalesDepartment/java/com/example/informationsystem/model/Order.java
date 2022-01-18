@@ -1,15 +1,35 @@
 package com.example.informationsystem.model;
 
-import java.io.Serializable;
+import com.example.informationsystem.reference.LocalDateAdapter;
+
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDate;
 
-public class Order  implements Serializable {
+@XmlRootElement
+@XmlType(name = "order")
+public class Order {
     static private int nextID = 0;
 
-    private int orderID;
+    private final int orderID;
     private Customer customer;
     private LocalDate orderDate;
     private double orderPrice;
+
+    public Order(){
+        this.orderID = 0;
+        this.customer = null;
+        this.orderDate = null;
+        this.orderPrice = 0;
+    }
+
+    public Order(Customer customer, LocalDate orderDate, double orderPrice){
+        this.orderID = nextID++;
+        this.customer = customer;
+        this.orderDate = orderDate;
+        this.orderPrice = orderPrice;
+    }
 
     public Customer getCustomer(){
         return customer;
@@ -23,6 +43,7 @@ public class Order  implements Serializable {
         return orderDate;
     }
 
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
     public void setOrderDate(LocalDate newOrderDate)
     {
         orderDate = newOrderDate;
@@ -44,14 +65,7 @@ public class Order  implements Serializable {
         nextID = newID;
     }
 
-    public Order(Customer customer, LocalDate orderDate, double orderPrice){
-        this.orderID = nextID++;
-        this.customer = customer;
-        this.orderDate = orderDate;
-        this.orderPrice = orderPrice;
-    }
-
     public String toString(){
-        return "ID: " + orderID + "; Customer: (" + customer.toString() + "); Date: " + orderDate + "; Price: " + orderPrice + "\n";
+        return "ID: " + orderID + "; model.Customer: (" + customer.toString() + "); Date: " + orderDate + "; Price: " + orderPrice + "\n";
     }
 }

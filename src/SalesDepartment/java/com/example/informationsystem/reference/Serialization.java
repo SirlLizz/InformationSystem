@@ -1,49 +1,66 @@
 package com.example.informationsystem.reference;
 
 import com.example.informationsystem.model.Customer;
+import com.example.informationsystem.model.CustomerList;
 import com.example.informationsystem.model.Order;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
+import com.example.informationsystem.model.OrderList;
 
 import java.io.*;
 import java.util.List;
+import javax.xml.bind.*;
 
 public class Serialization{
 
-    public void serialize (List order, File file){
+    public void serializeCustomer (List<Customer> list, File file){
         try{
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
-            out.writeObject(order);
-            out.close();
+            CustomerList customers = new CustomerList(list);
+            JAXBContext jaxbContext = JAXBContext.newInstance(CustomerList.class);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            jaxbMarshaller.marshal(customers, file);
         }
-        catch(IOException e){
-            System.out.println("Some error occurred!");
+        catch(JAXBException e ){
+            System.out.println(e.getMessage());
         }
     }
 
-    public List<Order> deserializeOrder (File file){
+    public void serializeOrder(List<Order> list, File file){
         try{
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
-            List<Order> read = (List<Order>)in.readObject();
-            in.close();
-            return read;
+            OrderList orders = new OrderList(list);
+            JAXBContext jaxbContext = JAXBContext.newInstance(OrderList.class);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            jaxbMarshaller.marshal(orders, file);
         }
-        catch(IOException | ClassNotFoundException e){
-            System.out.println("Some error occurred!");
+        catch(JAXBException e ){
+            System.out.println(e.getMessage());
         }
-        return null;
     }
 
     public List<Customer> deserializeCustomer (File file) {
         try{
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
-            List<Customer> read = (List<Customer>)in.readObject();
-            in.close();
-            return read;
+            JAXBContext jaxbContext = JAXBContext.newInstance(CustomerList.class);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            CustomerList read = (CustomerList)jaxbUnmarshaller.unmarshal(file);
+            return read.getCustomers();
         }
-        catch(IOException | ClassNotFoundException e){
-            System.out.println("Some error occurred!");
+        catch(JAXBException e){
+            System.out.println(e.getMessage());
         }
         return null;
     }
+
+    public List<Order> deserializeOrder (File file){
+        try{
+            JAXBContext jaxbContext = JAXBContext.newInstance(OrderList.class);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            OrderList read = (OrderList)jaxbUnmarshaller.unmarshal(file);
+            return read.getOrders();
+        }
+        catch(JAXBException e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
 }

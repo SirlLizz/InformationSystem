@@ -10,17 +10,31 @@ import com.example.informationsystem.view.AddOrderView;
 import com.example.informationsystem.view.ChangeCustomerView;
 import com.example.informationsystem.view.ChangeOrderView;
 
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MenuController{
 
-    Serialization serialization = new Serialization();
-    Find find = new Find();
+    Serialization serialization;
+    Find find;
+    AddOrderController addOrderController;
+    AddCustomerController addCustomerController;
+    ChangeCustomerController changeCustomerController;
+    ChangeOrderController changeOrderController;
+
+    public MenuController(Serialization serialization, Find find, AddOrderController addOrderController, AddCustomerController addCustomerController, ChangeOrderController changeOrderController, ChangeCustomerController changeCustomerController){
+        this.serialization = serialization;
+        this.find = find;
+        this.addOrderController = addOrderController;
+        this.addCustomerController = addCustomerController;
+        this.changeCustomerController = changeCustomerController;
+        this.changeOrderController = changeOrderController;
+    }
 
     public void addCustomerClick(ReferenceSystem department){
-        AddCustomerView addCust = new AddCustomerView(department);
+        AddCustomerView addCust = new AddCustomerView(department, addCustomerController);
         addCust.showStage();
     }
 
@@ -29,12 +43,12 @@ public class MenuController{
     }
 
     public void changeCustomerClick(ReferenceSystem department, int customerID){
-        ChangeCustomerView changeCust = new ChangeCustomerView(department, customerID);
+        ChangeCustomerView changeCust = new ChangeCustomerView(department, customerID, changeCustomerController);
         changeCust.showStage();
     }
 
     public void addOrderClick(ReferenceSystem department){
-        AddOrderView addOrd = new AddOrderView(department);
+        AddOrderView addOrd = new AddOrderView(department, addOrderController);
         addOrd.showStage();
     }
 
@@ -43,12 +57,12 @@ public class MenuController{
     }
 
     public void changeOrderClick(ReferenceSystem department, int orderID){
-        ChangeOrderView changeOrd = new ChangeOrderView(department, orderID);
+        ChangeOrderView changeOrd = new ChangeOrderView(department, orderID, changeOrderController);
         changeOrd.showStage();
     }
 
-    public void serializeOrder(ReferenceSystem department, File file){
-        serialization.serialize(department.getOrders(), file);
+    public void serializeOrder(ReferenceSystem department, File file) {
+        serialization.serializeOrder(department.getOrders(), file);
     }
 
     public void openOrder(ReferenceSystem department, File file){
@@ -80,7 +94,7 @@ public class MenuController{
     }
 
     public void serializeCustomer(ReferenceSystem department, File file) {
-        serialization.serialize(department.getCustomers(), file);
+        serialization.serializeCustomer(department.getCustomers(), file);
     }
 
     public void openCustomer(ReferenceSystem department, File file) {

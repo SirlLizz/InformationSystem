@@ -24,13 +24,14 @@ public class ChangeCustomerView {
     @FXML
     private TextField address;
 
-    ReferenceSystem department = null;
-    int customerId = 0;
-    ChangeCustomerController controller = new ChangeCustomerController();
+    ReferenceSystem department;
+    int customerId;
+    ChangeCustomerController controller;
 
-    public ChangeCustomerView(ReferenceSystem department, int customerID){
-        this.customerId = customerID;
+    public ChangeCustomerView(ReferenceSystem department, int customerID, ChangeCustomerController controller){
         this.department = department;
+        this.controller = controller;
+        this.customerId = customerID;
         stage = new Stage();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AddCustomer.fxml"));

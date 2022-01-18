@@ -24,11 +24,12 @@ public class AddCustomerView {
     @FXML
     private TextField address;
 
-    ReferenceSystem department = null;
-    AddCustomerController controller = new AddCustomerController();
+    ReferenceSystem department;
+    AddCustomerController addCustomerController;
 
-    public AddCustomerView(ReferenceSystem department){
+    public AddCustomerView(ReferenceSystem department, AddCustomerController addCustomerController){
         this.department = department;
+        this.addCustomerController = addCustomerController;
         stage = new Stage();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AddCustomer.fxml"));
@@ -51,7 +52,7 @@ public class AddCustomerView {
 
     @FXML
     protected void onAddCustomerButtonClick() {
-        controller.addCustomerClick(department, fullName.getText(), telephone.getText(), address.getText());
+        addCustomerController.addCustomerClick(fullName.getText(), telephone.getText(), address.getText());
         stage.close();
     }
 }

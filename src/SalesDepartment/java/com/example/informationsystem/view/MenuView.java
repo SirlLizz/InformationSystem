@@ -10,12 +10,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public class MenuView {
@@ -78,10 +81,11 @@ public class MenuView {
     private Button deleteOrderButton;
 
 
-    ReferenceSystem department = null;
-    MenuController controller = new MenuController();
+    ReferenceSystem department;
+    MenuController controller;
 
-    public MenuView(ReferenceSystem department) {
+    public MenuView(ReferenceSystem department, MenuController controller) {
+        this.controller = controller;
         this.department = department;
         stage = new Stage();
         try {
@@ -174,64 +178,64 @@ public class MenuView {
     }
 
     private void onSerializeOrderClick(){
-        File file = saveDialog("Serialized Order", "*.ord");
+        File file = saveDialog("Serialized Order", "*.xml");
         controller.serializeOrder(department, file);
     }
 
     private void onOpenOrderClick() {
-        File file = openDialog("Serialized Order", "*.ord");
+        File file = openDialog("Serialized Order", "*.xml");
         controller.openOrder(department, file);
         tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
         tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
     }
 
     private void onAddOpenOrderClick() {
-        File file = openDialog("Serialized Order", "*.ord");
+        File file = openDialog("Serialized Order", "*.xml");
         controller.addOpenOrder(department, file);
         tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
         tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
     }
 
     private void onSerializeCustomerClick(){
-        File file = saveDialog("Serialized Customer", "*.cust");
+        File file = saveDialog("Serialized Customer", "*.xml");
         controller.serializeCustomer(department, file);
     }
 
     private void onOpenCustomersClick() {
-        File file = openDialog("Serialized Customer", "*.cust");
+        File file = openDialog("Serialized Customer", "*.xml");
         controller.openCustomer(department, file);
         tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
     }
 
     private void onAddOpenCustomersClick() {
-        File file = openDialog("Serialized Customer", "*.cust");
+        File file = openDialog("Serialized Customer", "*.xml");
         controller.addOpenCustomer(department, file);
         tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
     }
 
     private void onFindDateClick(){
         String pattern = inputDialog("Date");
-        System.out.println(controller.findDate(department, pattern).toString());
+        outOrderDialog("Date", controller.findDate(department, pattern));
     }
 
     private void onFindPriceClick() {
         String pattern = inputDialog("Price");
-        System.out.println(controller.findPrice(department, pattern).toString());
+        outOrderDialog("Price", controller.findPrice(department, pattern));
     }
 
     private void onFindFullNameClick() {
         String pattern = inputDialog("Full Name");
-        System.out.println(controller.findFullName(department, pattern).toString());
+        outOrderDialog("Full Name", controller.findFullName(department, pattern));
     }
 
     private void onFindNumberClick() {
         String pattern = inputDialog("Number");
-        System.out.println(controller.findNumber(department, pattern).toString());
+        outOrderDialog("Number", controller.findNumber(department, pattern));
     }
 
     private void onFindAddressClick() {
         String pattern = inputDialog("Address");
-        System.out.println(controller.findAddress(department, pattern).toString());
+        outOrderDialog("Address", controller.findAddress(department, pattern));
     }
 
     private String inputDialog(String name) {
@@ -240,10 +244,7 @@ public class MenuView {
         dialog.setHeaderText("Find date on using pattern");
         dialog.setContentText("Please enter " + name + ":");
         Optional<String> result = dialog.showAndWait();
-        if (result.isPresent()){
-            return result.get();
-        }
-        return null;
+        return result.orElse(null);
     }
 
     private File saveDialog(String filterName, String filterType) {
@@ -258,6 +259,23 @@ public class MenuView {
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter(filterName, filterType));
         Stage stage = new Stage();
         return chooser.showOpenDialog(stage);
+    }
+
+    private void outOrderDialog(String head, List<Order> orders) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("FIND");
+        alert.setHeaderText("Find in " + head + ":");
+        StringBuilder out = new StringBuilder();
+        for(int i = 0; i<orders.size();i++){
+            out.append(orders.get(i).toString()).append("\n");
+        }
+        VBox dialogPaneContent = new VBox();
+        TextArea textArea = new TextArea();
+        textArea.setText(out.toString());
+        dialogPaneContent.getChildren().addAll(textArea);
+        alert.getDialogPane().setContent(dialogPaneContent);
+        alert.setContentText(out.toString());
+        alert.showAndWait();
     }
 
 }

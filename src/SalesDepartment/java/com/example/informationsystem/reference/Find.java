@@ -11,7 +11,7 @@ public class Find {
 
     public List<Order> findDate(ReferenceSystem department, String patternNew) {
         Pattern pattern = Pattern.compile(patternNew);
-        List<Order> findOrder = new ArrayList<Order>();
+        List<Order> findOrder = new ArrayList<>();
         for(int i =0; i<department.getOrders().size();i++){
             if(pattern.matcher(department.getOrders().get(i).getOrderDate().toString()).find()){
                 findOrder.add(department.getOrders().get(i));
@@ -22,11 +22,10 @@ public class Find {
 
     public List<Order> findPrice(ReferenceSystem department, String patternNew) {
         Pattern pattern = Pattern.compile(patternNew);
-        List<Order> findOrder = new ArrayList<Order>();
+        List<Order> findOrder = new ArrayList<>();
         for(int i =0; i<department.getOrders().size();i++){
             if(pattern.matcher(String.valueOf(department.getOrders().get(i).getOrderPrice())).find()){
                 findOrder.add(department.getOrders().get(i));
-                System.out.println(department.getOrders().get(i).toString());
             }
         }
         return findOrder;
@@ -34,7 +33,7 @@ public class Find {
 
     public List<Order> findFullName(ReferenceSystem department, String patternNew) {
         Pattern pattern = Pattern.compile(patternNew);
-        List<Order> findOrder = new ArrayList<Order>();
+        List<Order> findOrder = new ArrayList<>();
         for(int i =0; i<department.getOrders().size();i++){
             if(pattern.matcher(department.getOrders().get(i).getCustomer().getName()).find()){
                 findOrder.add(department.getOrders().get(i));
@@ -45,7 +44,7 @@ public class Find {
 
     public List<Order> findNumber(ReferenceSystem department, String patternNew) {
         Pattern pattern = Pattern.compile(patternNew);
-        List<Order> findOrder = new ArrayList<Order>();
+        List<Order> findOrder = new ArrayList<>();
         for(int i =0; i<department.getOrders().size();i++){
             if(pattern.matcher(department.getOrders().get(i).getCustomer().getPhoneNumber()).find()){
                 findOrder.add(department.getOrders().get(i));
@@ -56,7 +55,7 @@ public class Find {
 
     public List<Order> findAddress(ReferenceSystem department, String patternNew) {
         Pattern pattern = Pattern.compile(patternNew);
-        List<Order> findOrder = new ArrayList<Order>();
+        List<Order> findOrder = new ArrayList<>();
         for(int i =0; i<department.getOrders().size();i++){
             if(pattern.matcher(department.getOrders().get(i).getCustomer().getAddress()).find()){
                 findOrder.add(department.getOrders().get(i));

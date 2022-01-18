@@ -10,16 +10,24 @@ import java.util.List;
 
 public class AddOrderController {
 
-    public void addCustomerClick(ReferenceSystem department){
-        AddCustomerView addCust = new AddCustomerView(department);
+    ReferenceSystem department;
+    AddCustomerController addCustomerController;
+
+    public AddOrderController(ReferenceSystem department, AddCustomerController addCustomerController){
+        this.department = department;
+        this.addCustomerController = addCustomerController;
+    }
+
+    public void addCustomerClick(){
+        AddCustomerView addCust = new AddCustomerView(department, addCustomerController);
         addCust.showStage();
     }
 
-    public void addOrderClick(ReferenceSystem department, Customer customer, LocalDate date, double price){
+    public void addOrderClick( Customer customer, LocalDate date, double price){
         department.addOrder(customer, date, price);
     }
 
-    public Customer actionComboBox(ReferenceSystem department, String comboValue){
+    public Customer actionComboBox(String comboValue){
         Customer customer = null;
         for (int i = 0; i < department.getCustomers().size(); i++) {
             if (department.getCustomers().get(i).getName().equals(comboValue)) {
@@ -28,7 +36,7 @@ public class AddOrderController {
         }
         return customer;
     }
-    public List<String> showComboBox(ReferenceSystem department){
+    public List<String> showComboBox(){
         List<String> names = new ArrayList<>();
         for (int i = 0; i < department.getCustomers().size(); i++){
             names.add(department.getCustomers().get(i).getName());
@@ -41,15 +49,12 @@ public class AddOrderController {
             Double priceDouble = Double.parseDouble(price);
             return true;
         } catch(NumberFormatException e){
-            System.out.println("Price is incorrect!");
+            System.out.println(e.getMessage());
         }
         return false;
     }
 
     public boolean checkCustomer(Customer customer) {
-        if(customer == null){
-            return false;
-        }
-        return true;
+        return customer != null;
     }
 }
