@@ -68,6 +68,14 @@ public class MenuView {
     @FXML
     private MenuItem findAddressButton;
     @FXML
+    private MenuItem sortOrderToHigh;
+    @FXML
+    private MenuItem sortOrderToLow;
+    @FXML
+    private MenuItem sortCustomerToHigh;
+    @FXML
+    private MenuItem sortCustomerToLow;
+    @FXML
     private Button addCustomerButton;
     @FXML
     private Button changeCustomerButton;
@@ -123,6 +131,10 @@ public class MenuView {
         findFullNameButton.setOnAction(event -> onFindFullNameClick());
         findNumberButton.setOnAction(event -> onFindNumberClick());
         findAddressButton.setOnAction(event -> onFindAddressClick());
+        sortCustomerToHigh.setOnAction(event -> onSortCustomerToHigh());
+        sortCustomerToLow.setOnAction(event -> onSortCustomerToLow());
+        sortOrderToHigh.setOnAction(event -> onSortOrderToHigh());
+        sortOrderToLow.setOnAction(event -> onSortOrderToLow());
         addCustomerButton.setOnAction(event -> onAddCustomerClick());
         changeCustomerButton.setOnAction(event -> onChangeCustomerClick());
         deleteCustomerButton.setOnAction(event -> onDeleteCustomerClick());
@@ -132,14 +144,14 @@ public class MenuView {
     }
 
     private void onAddCustomerClick() {
-        controller.addCustomerClick(department);
+        controller.addCustomerClick();
         tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
     }
 
     private void onDeleteCustomerClick() {
         TableView.TableViewSelectionModel<Customer> selectionModel = tableCustomer.getSelectionModel();
         if(selectionModel.getSelectedItem()!=null){
-            controller.deleteCustomerClick(department, selectionModel.getSelectedItem().getCustomerID());
+            controller.deleteCustomerClick(selectionModel.getSelectedItem().getCustomerID());
             tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
             tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
         }
@@ -148,14 +160,14 @@ public class MenuView {
     private void onChangeCustomerClick() {
         TableView.TableViewSelectionModel<Customer> selectionModel = tableCustomer.getSelectionModel();
         if(selectionModel.getSelectedItem()!=null){
-            controller.changeCustomerClick(department, selectionModel.getSelectedItem().getCustomerID());
+            controller.changeCustomerClick(selectionModel.getSelectedItem().getCustomerID());
             tableCustomer.refresh();
             tableOrder.refresh();
         }
     }
 
     private void onAddOrderClick(){
-        controller.addOrderClick(department);
+        controller.addOrderClick();
         tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
         tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
     }
@@ -163,7 +175,7 @@ public class MenuView {
     private void onDeleteOrderClick() {
         TableView.TableViewSelectionModel<Order> selectionModel = tableOrder.getSelectionModel();
         if(selectionModel.getSelectedItem()!=null){
-            controller.deleteOrderClick(department, selectionModel.getSelectedItem().getOrderID());
+            controller.deleteOrderClick(selectionModel.getSelectedItem().getOrderID());
             tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
         }
     }
@@ -171,7 +183,7 @@ public class MenuView {
     private void onChangeOrderClick() {
         TableView.TableViewSelectionModel<Order> selectionModel = tableOrder.getSelectionModel();
         if(selectionModel.getSelectedItem()!=null){
-            controller.changeOrderClick(department, selectionModel.getSelectedItem().getOrderID());
+            controller.changeOrderClick(selectionModel.getSelectedItem().getOrderID());
             tableCustomer.refresh();
             tableOrder.refresh();
         }
@@ -179,63 +191,83 @@ public class MenuView {
 
     private void onSerializeOrderClick(){
         File file = saveDialog("Serialized Order", "*.xml");
-        controller.serializeOrder(department, file);
+        controller.serializeOrder(file);
     }
 
     private void onOpenOrderClick() {
         File file = openDialog("Serialized Order", "*.xml");
-        controller.openOrder(department, file);
+        controller.openOrder(file);
         tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
         tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
     }
 
     private void onAddOpenOrderClick() {
         File file = openDialog("Serialized Order", "*.xml");
-        controller.addOpenOrder(department, file);
+        controller.addOpenOrder(file);
         tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
         tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
     }
 
     private void onSerializeCustomerClick(){
         File file = saveDialog("Serialized Customer", "*.xml");
-        controller.serializeCustomer(department, file);
+        controller.serializeCustomer(file);
     }
 
     private void onOpenCustomersClick() {
         File file = openDialog("Serialized Customer", "*.xml");
-        controller.openCustomer(department, file);
+        controller.openCustomer(file);
         tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
     }
 
     private void onAddOpenCustomersClick() {
         File file = openDialog("Serialized Customer", "*.xml");
-        controller.addOpenCustomer(department, file);
+        controller.addOpenCustomer(file);
         tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
     }
 
     private void onFindDateClick(){
         String pattern = inputDialog("Date");
-        outOrderDialog("Date", controller.findDate(department, pattern));
+        outOrderDialog("Date", controller.findDate(pattern));
     }
 
     private void onFindPriceClick() {
         String pattern = inputDialog("Price");
-        outOrderDialog("Price", controller.findPrice(department, pattern));
+        outOrderDialog("Price", controller.findPrice(pattern));
     }
 
     private void onFindFullNameClick() {
         String pattern = inputDialog("Full Name");
-        outOrderDialog("Full Name", controller.findFullName(department, pattern));
+        outOrderDialog("Full Name", controller.findFullName(pattern));
     }
 
     private void onFindNumberClick() {
         String pattern = inputDialog("Number");
-        outOrderDialog("Number", controller.findNumber(department, pattern));
+        outOrderDialog("Number", controller.findNumber(pattern));
     }
 
     private void onFindAddressClick() {
         String pattern = inputDialog("Address");
-        outOrderDialog("Address", controller.findAddress(department, pattern));
+        outOrderDialog("Address", controller.findAddress(pattern));
+    }
+
+    private void onSortCustomerToHigh() {
+        controller.sortCustomerToHigh();
+        tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
+    }
+
+    private void onSortCustomerToLow() {
+        controller.sortCustomerToLow();
+        tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
+    }
+
+    private void onSortOrderToHigh() {
+        controller.sortOrderToHigh();
+        tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
+    }
+
+    private void onSortOrderToLow() {
+        controller.sortOrderToLow();
+        tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
     }
 
     private String inputDialog(String name) {

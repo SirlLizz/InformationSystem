@@ -43,6 +43,22 @@
                   </Menu>
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Sort by ID">
+               <items>
+                  <Menu mnemonicParsing="false" text="Order">
+                     <items>
+                        <MenuItem fx:id="sortOrderToHigh" mnemonicParsing="false" text="🔼" />
+                        <MenuItem fx:id="sortOrderToLow" mnemonicParsing="false" text="🔽" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Customer">
+                     <items>
+                        <MenuItem fx:id="sortCustomerToHigh" mnemonicParsing="false" text="🔼" />
+                        <MenuItem fx:id="sortCustomerToLow" mnemonicParsing="false" text="🔽" />
+                     </items>
+                  </Menu>
+               </items>
+            </Menu>
             </menus>
         </MenuBar>
       <TabPane prefHeight="653.0" prefWidth="527.0" tabClosingPolicy="UNAVAILABLE">
@@ -71,7 +87,7 @@
                            <children>
                                 <Button fx:id="addOrderButton" alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="25.0" prefWidth="263.0" text="Add Order" textAlignment="CENTER" />
                               <Button fx:id="changeOrderButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="199.0" text="Change Order" GridPane.columnIndex="1" />
-                              <Button fx:id="deleteOrderButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="230.0" text="Delete Button" GridPane.columnIndex="2" />
+                              <Button fx:id="deleteOrderButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="230.0" text="Delete Order" GridPane.columnIndex="2" />
                            </children>
                         </GridPane>
                      </children>

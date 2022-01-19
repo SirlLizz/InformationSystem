@@ -9,7 +9,13 @@ import java.util.regex.Pattern;
 
 public class Find {
 
-    public List<Order> findDate(ReferenceSystem department, String patternNew) {
+    ReferenceSystem department;
+
+    public Find(ReferenceSystem department){
+        this.department = department;
+    }
+
+    public List<Order> findDate(String patternNew) {
         Pattern pattern = Pattern.compile(patternNew);
         List<Order> findOrder = new ArrayList<>();
         for(int i =0; i<department.getOrders().size();i++){
@@ -20,7 +26,7 @@ public class Find {
         return findOrder;
     }
 
-    public List<Order> findPrice(ReferenceSystem department, String patternNew) {
+    public List<Order> findPrice(String patternNew) {
         Pattern pattern = Pattern.compile(patternNew);
         List<Order> findOrder = new ArrayList<>();
         for(int i =0; i<department.getOrders().size();i++){
@@ -31,7 +37,7 @@ public class Find {
         return findOrder;
     }
 
-    public List<Order> findFullName(ReferenceSystem department, String patternNew) {
+    public List<Order> findFullName(String patternNew) {
         Pattern pattern = Pattern.compile(patternNew);
         List<Order> findOrder = new ArrayList<>();
         for(int i =0; i<department.getOrders().size();i++){
@@ -42,7 +48,7 @@ public class Find {
         return findOrder;
     }
 
-    public List<Order> findNumber(ReferenceSystem department, String patternNew) {
+    public List<Order> findNumber(String patternNew) {
         Pattern pattern = Pattern.compile(patternNew);
         List<Order> findOrder = new ArrayList<>();
         for(int i =0; i<department.getOrders().size();i++){
@@ -53,7 +59,7 @@ public class Find {
         return findOrder;
     }
 
-    public List<Order> findAddress(ReferenceSystem department, String patternNew) {
+    public List<Order> findAddress(String patternNew) {
         Pattern pattern = Pattern.compile(patternNew);
         List<Order> findOrder = new ArrayList<>();
         for(int i =0; i<department.getOrders().size();i++){

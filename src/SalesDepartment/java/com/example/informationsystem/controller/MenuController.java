@@ -10,13 +10,14 @@ import com.example.informationsystem.view.AddOrderView;
 import com.example.informationsystem.view.ChangeCustomerView;
 import com.example.informationsystem.view.ChangeOrderView;
 
-import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class MenuController{
 
+    ReferenceSystem department;
     Serialization serialization;
     Find find;
     AddOrderController addOrderController;
@@ -24,7 +25,8 @@ public class MenuController{
     ChangeCustomerController changeCustomerController;
     ChangeOrderController changeOrderController;
 
-    public MenuController(Serialization serialization, Find find, AddOrderController addOrderController, AddCustomerController addCustomerController, ChangeOrderController changeOrderController, ChangeCustomerController changeCustomerController){
+    public MenuController(ReferenceSystem department, Serialization serialization, Find find, AddOrderController addOrderController, AddCustomerController addCustomerController, ChangeOrderController changeOrderController, ChangeCustomerController changeCustomerController){
+        this.department = department;
         this.serialization = serialization;
         this.find = find;
         this.addOrderController = addOrderController;
@@ -33,39 +35,39 @@ public class MenuController{
         this.changeOrderController = changeOrderController;
     }
 
-    public void addCustomerClick(ReferenceSystem department){
+    public void addCustomerClick(){
         AddCustomerView addCust = new AddCustomerView(department, addCustomerController);
         addCust.showStage();
     }
 
-    public void deleteCustomerClick(ReferenceSystem department, int customerID){
+    public void deleteCustomerClick(int customerID){
         department.removeCustomer(customerID);
     }
 
-    public void changeCustomerClick(ReferenceSystem department, int customerID){
+    public void changeCustomerClick(int customerID){
         ChangeCustomerView changeCust = new ChangeCustomerView(department, customerID, changeCustomerController);
         changeCust.showStage();
     }
 
-    public void addOrderClick(ReferenceSystem department){
+    public void addOrderClick(){
         AddOrderView addOrd = new AddOrderView(department, addOrderController);
         addOrd.showStage();
     }
 
-    public void deleteOrderClick(ReferenceSystem department, int orderID){
+    public void deleteOrderClick(int orderID){
         department.removeOrder(orderID);
     }
 
-    public void changeOrderClick(ReferenceSystem department, int orderID){
+    public void changeOrderClick(int orderID){
         ChangeOrderView changeOrd = new ChangeOrderView(department, orderID, changeOrderController);
         changeOrd.showStage();
     }
 
-    public void serializeOrder(ReferenceSystem department, File file) {
+    public void serializeOrder(File file) {
         serialization.serializeOrder(department.getOrders(), file);
     }
 
-    public void openOrder(ReferenceSystem department, File file){
+    public void openOrder(File file){
         List<Order> orders = serialization.deserializeOrder(file);
         department.setCustomers(new ArrayList<>());
         department.setOrders(new ArrayList<>());
@@ -79,7 +81,7 @@ public class MenuController{
         }
     }
 
-    public void addOpenOrder(ReferenceSystem department, File file){
+    public void addOpenOrder(File file){
         List<Order> orders = serialization.deserializeOrder(file);
         for (int i = 0; i< orders.size();i++){
             if(department.checkOrder(orders.get(i)) == -1){
@@ -93,15 +95,15 @@ public class MenuController{
         }
     }
 
-    public void serializeCustomer(ReferenceSystem department, File file) {
+    public void serializeCustomer(File file) {
         serialization.serializeCustomer(department.getCustomers(), file);
     }
 
-    public void openCustomer(ReferenceSystem department, File file) {
+    public void openCustomer(File file) {
         department.setCustomers(serialization.deserializeCustomer(file));
     }
 
-    public void addOpenCustomer(ReferenceSystem department, File file) {
+    public void addOpenCustomer(File file) {
         List<Customer> customers = serialization.deserializeCustomer(file);
         for (int i = 0; i< customers.size();i++){
             if(department.checkCustomer(customers.get(i)) == -1){
@@ -110,23 +112,44 @@ public class MenuController{
         }
     }
 
-    public List<Order> findDate(ReferenceSystem department, String pattern) {
-        return find.findDate(department, pattern);
+    public List<Order> findDate(String pattern) {
+        return find.findDate(pattern);
     }
 
-    public List<Order> findPrice(ReferenceSystem department, String pattern) {
-        return find.findPrice(department, pattern);
+    public List<Order> findPrice(String pattern) {
+        return find.findPrice(pattern);
     }
 
-    public List<Order> findFullName(ReferenceSystem department, String pattern) {
-        return find.findFullName(department, pattern);
+    public List<Order> findFullName(String pattern) {
+        return find.findFullName(pattern);
     }
 
-    public List<Order> findNumber(ReferenceSystem department, String pattern) {
-        return find.findNumber(department, pattern);
+    public List<Order> findNumber(String pattern) {
+        return find.findNumber(pattern);
     }
 
-    public List<Order> findAddress(ReferenceSystem department, String pattern) {
-        return find.findAddress(department, pattern);
+    public List<Order> findAddress(String pattern) {
+        return find.findAddress(pattern);
     }
+
+    public void sortCustomerToHigh() {
+        Comparator<Customer> comparator = Comparator.comparing(Customer::getCustomerID);
+        department.getCustomers().sort(comparator);
+    }
+
+    public void sortCustomerToLow() {
+        Comparator<Customer> comparator = Comparator.comparing(Customer::getCustomerID).reversed();
+        department.getCustomers().sort(comparator);
+    }
+
+    public void sortOrderToHigh() {
+        Comparator<Order> comparator = Comparator.comparing(Order::getOrderID);
+        department.getOrders().sort(comparator);
+    }
+
+    public void sortOrderToLow() {
+        Comparator<Order> comparator = Comparator.comparing(Order::getOrderID).reversed();
+        department.getOrders().sort(comparator);
+    }
+
 }
