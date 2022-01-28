@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" prefHeight="428.0" prefWidth="567.0" spacing="20.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <children>
+        <MenuBar>
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <Menu mnemonicParsing="false" text="Order">
+                            <items>
+                      <MenuItem fx:id="serializeOrderButton" mnemonicParsing="false" text="Serialize Order" />
+                        <MenuItem fx:id="openOrderButton" mnemonicParsing="false" text="Open Order" />
+                        <MenuItem fx:id="addOpenOrderButton" mnemonicParsing="false" text="Open to Add Order" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Customer">
+                            <items>
+                    <MenuItem fx:id="serializeCustomerButton" mnemonicParsing="false" text="Serialize Customer" />
+                        <MenuItem fx:id="openCustomerButton" mnemonicParsing="false" text="Open Customer" />
+                        <MenuItem fx:id="addOpenCustomerButton" mnemonicParsing="false" text="Open to Add Customer" />
+                            </items>
+                        </Menu>
+                    </items>
+                </Menu>
+            <Menu mnemonicParsing="false" text="Find in...">
+              <items>
+                <MenuItem fx:id="findDateButton" mnemonicParsing="false" text="Date" />
+                  <MenuItem fx:id="findPriceButton" mnemonicParsing="false" text="Price" />
+                  <Menu mnemonicParsing="false" text="Customer">
+                    <items>
+                      <MenuItem fx:id="findFullNameButton" mnemonicParsing="false" text="Full Name" />
+                        <MenuItem fx:id="findNumberButton" mnemonicParsing="false" text="Phone number" />
+                        <MenuItem fx:id="findAddressButton" mnemonicParsing="false" text="Address" />
+                    </items>
+                  </Menu>
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Sort by ID">
+               <items>
+                  <Menu mnemonicParsing="false" text="Order">
+                     <items>
+                        <MenuItem fx:id="sortOrderToHigh" mnemonicParsing="false" text="🔼" />
+                        <MenuItem fx:id="sortOrderToLow" mnemonicParsing="false" text="🔽" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Customer">
+                     <items>
+                        <MenuItem fx:id="sortCustomerToHigh" mnemonicParsing="false" text="🔼" />
+                        <MenuItem fx:id="sortCustomerToLow" mnemonicParsing="false" text="🔽" />
+                     </items>
+                  </Menu>
+               </items>
+            </Menu>
+            </menus>
+        </MenuBar>
+      <TabPane prefHeight="653.0" prefWidth="527.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Order">
+               <content>
+                  <VBox prefHeight="305.0" prefWidth="217.0">
+                     <children>
+                        <TableView fx:id="tableOrder" prefHeight="292.0" prefWidth="527.0">
+                          <columns>
+                            <TableColumn fx:id="columnOrderID" prefWidth="75.0" text="Order ID" />
+                              <TableColumn fx:id="columnCustomer" prefWidth="284.0" text="Customer" />
+                              <TableColumn fx:id="columnPrice" minWidth="0.0" prefWidth="69.0" text="Price" />
+                              <TableColumn fx:id="columnDate" prefWidth="99.0" text="Date" />
+                          </columns>
+                        </TableView>
+                        <GridPane>
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                                <Button fx:id="addOrderButton" alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="25.0" prefWidth="263.0" text="Add Order" textAlignment="CENTER" />
+                              <Button fx:id="changeOrderButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="199.0" text="Change Order" GridPane.columnIndex="1" />
+                              <Button fx:id="deleteOrderButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="230.0" text="Delete Order" GridPane.columnIndex="2" />
+                           </children>
+                        </GridPane>
+                     </children>
+                  </VBox>
+               </content>
+          </Tab>
+          <Tab text="Customer">
+               <content>
+                  <VBox prefHeight="555.0" prefWidth="527.0">
+                     <children>
+                        <TableView fx:id="tableCustomer" prefHeight="293.0" prefWidth="527.0">
+                           <columns>
+                              <TableColumn fx:id="columnCustomerID" prefWidth="75.0" text="Customer ID" />
+                              <TableColumn fx:id="columnName" prefWidth="75.0" text="Full Name" />
+                              <TableColumn fx:id="columnPhone" prefWidth="75.0" text="Phone" />
+                              <TableColumn fx:id="columnAddress" prefWidth="75.0" text="Address" />
+                           </columns>
+                        </TableView>
+                        <GridPane prefHeight="31.0" prefWidth="519.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                                <Button fx:id="addCustomerButton" prefHeight="25.0" prefWidth="264.0" text="Add Customer" />
+                              <Button fx:id="changeCustomerButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="196.0" text="Change Customer" GridPane.columnIndex="1" />
+                              <Button fx:id="deleteCustomerButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="212.0" text="Delete Customer" GridPane.columnIndex="2" />
+                           </children>
+                        </GridPane>
+                     </children>
+                  </VBox>
+               </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</VBox>
