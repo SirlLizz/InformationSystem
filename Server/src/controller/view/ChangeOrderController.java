@@ -1,9 +1,8 @@
-package com.example.informationsystem.controller;
+package controller.view;
 
-import com.example.informationsystem.model.Customer;
-import com.example.informationsystem.reference.ReferenceSystem;
-import com.example.informationsystem.view.AddCustomerView;
-import com.example.informationsystem.view.ChangeCustomerView;
+
+import model.Customer;
+import reference.ReferenceSystem;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,8 +19,11 @@ public class ChangeOrderController {
     }
 
     public void changeCustomerClick(int customerID){
+        /*
         ChangeCustomerView changeCust = new ChangeCustomerView(department, customerID, changeCustomerController);
         changeCust.showStage();
+
+         */
     }
 
     public void changeOrderClick(int orderID, Customer customer, LocalDate date, double price){

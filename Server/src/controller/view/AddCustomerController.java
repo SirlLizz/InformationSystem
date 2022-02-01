@@ -1,6 +1,7 @@
-package com.example.informationsystem.controller;
+package controller.view;
 
-import com.example.informationsystem.reference.ReferenceSystem;
+
+import reference.ReferenceSystem;
 
 public class AddCustomerController {
 

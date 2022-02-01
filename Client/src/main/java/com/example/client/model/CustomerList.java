@@ -25,20 +25,4 @@ public class CustomerList {
     public void setCustomers(List<Customer> newCustomers) {
         this.customers = newCustomers;
     }
-
-    public int size(){
-        return customers.size();
-    }
-
-    public Customer get(int i){
-        return customers.get(i);
-    }
-
-    public void add(Customer customer){
-        customers.add(customer);
-    }
-
-    public void remove(int i){
-        customers.remove(i);
-    }
 }

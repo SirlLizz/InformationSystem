@@ -3,6 +3,7 @@ module com.example.client {
     requires javafx.fxml;
     requires java.xml.bind;
 
+
     opens com.example.client.model to java.xml.bind;
     exports com.example.client.model;
     opens com.example.client.transport to java.xml.bind;
@@ -11,4 +12,7 @@ module com.example.client {
     opens com.example.client.controller to javafx.fxml;
     exports com.example.client.view;
     opens com.example.client.view to javafx.fxml;
+    opens com.example.client.reference;
+    exports com.example.client.reference;
+
 }

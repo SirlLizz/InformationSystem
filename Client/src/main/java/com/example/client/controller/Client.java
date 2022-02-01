@@ -2,7 +2,7 @@ package com.example.client.controller;
 
 import com.example.client.reference.ReferenceSystem;
 import com.example.client.transport.Request;
-import com.example.client.transport.Responce;
+import com.example.client.transport.Response;
 import com.example.client.view.MenuView;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -21,7 +21,7 @@ public class Client extends Application {
     private ObjectOutputStream out;
     private ReferenceSystem department = new ReferenceSystem();
     private Request reqest;
-    private Responce responce;
+    private Response response;
 
     private MenuView menu;
 
@@ -32,8 +32,8 @@ public class Client extends Application {
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
         reqest = new Request();
-        responce = new Responce();
-        menu = new MenuView(department, in, out, reqest, responce);
+        response = new Response();
+        menu = new MenuView(department, in, out, reqest, response);
         menu.showStage();
     }
 }

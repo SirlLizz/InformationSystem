@@ -1,4 +1,4 @@
-package controller;
+package controller.view;
 
 
 import model.Customer;
@@ -8,26 +8,25 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChangeOrderController {
+public class AddOrderController {
 
     ReferenceSystem department;
-    ChangeCustomerController changeCustomerController;
+    AddCustomerController addCustomerController;
 
-    public ChangeOrderController(ReferenceSystem department, ChangeCustomerController changeCustomerController){
+    public AddOrderController(ReferenceSystem department, AddCustomerController addCustomerController){
         this.department = department;
-        this.changeCustomerController = changeCustomerController;
+        this.addCustomerController = addCustomerController;
     }
 
-    public void changeCustomerClick(int customerID){
+    public void addCustomerClick(){
         /*
-        ChangeCustomerView changeCust = new ChangeCustomerView(department, customerID, changeCustomerController);
-        changeCust.showStage();
-
+        AddCustomerView addCust = new AddCustomerView(department, addCustomerController);
+        addCust.showStage();
          */
     }
 
-    public void changeOrderClick(int orderID, Customer customer, LocalDate date, double price){
-        department.changeOrderInformation(orderID, customer, date, price);
+    public void addOrderClick(Customer customer, LocalDate date, double price){
+        department.addOrder(customer, date, price);
     }
 
     public Customer actionComboBox(String comboValue){

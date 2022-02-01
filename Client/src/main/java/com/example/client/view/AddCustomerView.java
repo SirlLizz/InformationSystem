@@ -2,7 +2,7 @@ package com.example.client.view;
 
 import com.example.client.reference.ReferenceSystem;
 import com.example.client.transport.Request;
-import com.example.client.transport.Responce;
+import com.example.client.transport.Response;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,7 +15,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class AddCustomerView {
@@ -31,9 +30,9 @@ public class AddCustomerView {
     @FXML
     private TextField address;
 
-    ReferenceSystem department;
-    ObjectOutputStream out;
-    Request request;
+    private ReferenceSystem department;
+    private ObjectOutputStream out;
+    private Request request;
 
     public AddCustomerView(ReferenceSystem department, ObjectOutputStream out, Request request){
         this.department = department;
@@ -67,7 +66,6 @@ public class AddCustomerView {
 
         try {
             //out.writeObject(request);
-
             JAXBContext jaxbContext = JAXBContext.newInstance(Request.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -75,13 +73,8 @@ public class AddCustomerView {
             out.writeObject(null);
             out.flush();
             jaxbMarshaller.marshal(request, System.out);
-
             System.out.println("OK");
-        } catch (PropertyException e) {
-            e.printStackTrace();
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (JAXBException | IOException e) {
             e.printStackTrace();
         }
         stage.close();

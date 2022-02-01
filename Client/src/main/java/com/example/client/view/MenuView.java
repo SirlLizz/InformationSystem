@@ -4,7 +4,8 @@ import com.example.client.model.Customer;
 import com.example.client.model.Order;
 import com.example.client.reference.ReferenceSystem;
 import com.example.client.transport.Request;
-import com.example.client.transport.Responce;
+import com.example.client.transport.Response;
+import com.example.client.transport.Response;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +17,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -88,19 +92,18 @@ public class MenuView {
     @FXML
     private Button deleteOrderButton;
 
+    private ReferenceSystem department;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
+    private Request request;
+    private Response response;
 
-    ReferenceSystem department;
-    ObjectInputStream in;
-    ObjectOutputStream out;
-    Request request;
-    Responce responce;
-
-    public MenuView(ReferenceSystem department, ObjectInputStream in, ObjectOutputStream out, Request request, Responce responce) {
+    public MenuView(ReferenceSystem department, ObjectInputStream in, ObjectOutputStream out, Request request, Response response) {
         this.department = department;
         this.in = in;
         this.out = out;
         this.request = request;
-        this.responce = responce;
+        this.response = response;
         stage = new Stage();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Menu.fxml"));
@@ -151,10 +154,18 @@ public class MenuView {
          */
     }
 
-    private void onAddCustomerClick() {
-        AddCustomerView addCust = new AddCustomerView(department, out, request);
-        addCust.showStage();
-        tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
+    private void onAddCustomerClick(){
+        try{
+            AddCustomerView addCust = new AddCustomerView(department, out, request);
+            addCust.showStage();
+            //responce = (Response) in.readObject();
+            JAXBContext jaxbInContext = JAXBContext.newInstance(Response.class);
+            Unmarshaller jaxbInUnmarshaller = jaxbInContext.createUnmarshaller();
+            tableCustomer.setItems(FXCollections.observableArrayList(((Response) jaxbInUnmarshaller.unmarshal(in)).getDepartment().getCustomers()));
+        }catch (JAXBException e){
+            e.printStackTrace();
+        }
+
     }
 
     /*

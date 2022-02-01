@@ -25,20 +25,4 @@ public class OrderList {
     public void setOrders(List<Order> orders) {
         this.orders = orders;
     }
-
-    public int size(){
-        return orders.size();
-    }
-
-    public Order get(int i){
-        return orders.get(i);
-    }
-
-    public void add(Order order){
-        orders.add(order);
-    }
-
-    public void remove(int i){
-        orders.remove(i);
-    }
 }

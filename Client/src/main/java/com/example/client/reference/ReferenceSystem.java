@@ -1,40 +1,34 @@
 package com.example.client.reference;
 
 import com.example.client.model.Customer;
-import com.example.client.model.CustomerList;
 import com.example.client.model.Order;
-import com.example.client.model.OrderList;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReferenceSystem{
-    private CustomerList customers;
-    private OrderList orders;
+public class ReferenceSystem {
+    private List<Customer> customers;
+    private List<Order> orders;
 
     public ReferenceSystem(){
-        customers = new CustomerList();
-        orders = new OrderList();
-    }
-
-    public CustomerList getCustomerList(){
-        return customers;
+        customers = new ArrayList<>();
+        orders = new ArrayList<>();
     }
 
     public List<Customer> getCustomers(){
-        return customers.getCustomers();
+        return customers;
     }
 
-    public OrderList getOrders(){
+    public List<Order> getOrders(){
         return orders;
     }
 
-    public void setCustomers(CustomerList newCustomers){
+    public void setCustomers(List<Customer> newCustomers){
         customers = newCustomers;
     }
 
-    public void setOrders(OrderList newOrders){
+    public void setOrders(List<Order> newOrders){
         orders = newOrders;
     }
 
