@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerConnectionListener {
+public class ServerConnectionListener extends Thread {
 
     private ServerSocket serverSocket;
 
@@ -12,14 +12,19 @@ public class ServerConnectionListener {
         this.serverSocket = serverSocket;
     }
 
-    public void start() throws Exception {
+    public void start() {
         int id = 1;
-        while (true){
-            Socket socket = serverSocket.accept();
-            Server newConnection = new Server(socket, id);
-            System.out.println("User " + id + " connected");
-            newConnection.start();
-            ++id;
+        try {
+            while (true){
+                Socket socket = null;
+                socket = serverSocket.accept();
+                Server newConnection = new Server(socket, id);
+                System.out.println("User " + id + " connected");
+                newConnection.start();
+                ++id;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

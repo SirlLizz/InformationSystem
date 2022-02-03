@@ -1,15 +1,16 @@
-package com.example.client.model;
+package model;
 
-import com.example.client.reference.LocalDateAdapter;
+import reference.LocalDateAdapter;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @XmlRootElement
 @XmlType(name = "order")
-public class Order {
+public class Order implements Serializable{
     static private int nextID = 0;
 
     private final int orderID;

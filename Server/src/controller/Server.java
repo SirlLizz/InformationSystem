@@ -12,7 +12,6 @@ import java.util.Arrays;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 class Server extends Thread {
@@ -35,24 +34,26 @@ class Server extends Thread {
     @Override
     public void run() {
         try {
-
             System.out.println("Client run " + id);
             while (!socket.isClosed()){
                 try {
-                    //Request request = (Request) in.readObject();
+                    Request request = (Request) in.readObject();
 
+                    /*
                     JAXBContext jaxbInContext = JAXBContext.newInstance(Request.class);
                     Unmarshaller jaxbInUnmarshaller = jaxbInContext.createUnmarshaller();
                     Request request = (Request)jaxbInUnmarshaller.unmarshal(in);
+                     */
 
-                    System.out.println(request.getCommand());
-                    System.out.println(Arrays.toString(request.getArgs()));
+                    System.out.println("Client "+ id + " command: " + request.getCommand());
 
                     requestHandler.setRequest(request);
                     Response response = requestHandler.performRequest();
 
-                    //out.writeObject(responce);
+                    out.writeObject(response);
+                    out.reset();
 
+                    /*
                     JAXBContext jaxbOutContext = JAXBContext.newInstance(Response.class);
                     Marshaller jaxbOutMarshaller = jaxbOutContext.createMarshaller();
                     jaxbOutMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -60,10 +61,10 @@ class Server extends Thread {
                     jaxbOutMarshaller.marshal(response, out);
                     out.writeObject(null);
                     out.flush();
+                     */
 
-                } catch (JAXBException | IOException e) {
+                } catch (IOException e) {
                     System.out.println("Failed connection with " + id);
-                    e.printStackTrace();
                     break;
                 }
             }
@@ -72,7 +73,6 @@ class Server extends Thread {
             socket.close();
         } catch (Exception e) {
             System.out.println("Output data failed");
-            e.printStackTrace();
         }
     }
 }

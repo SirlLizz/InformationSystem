@@ -1,4 +1,4 @@
-package reference;
+package com.example.client.reference;
 
 import model.Customer;
 import model.CustomerList;

@@ -1,13 +1,14 @@
-package com.example.client.model;
+package model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @XmlType(name = "orderList")
 @XmlRootElement
-public class OrderList {
+public class OrderList implements Serializable {
     private List<Order> orders;
 
     public  OrderList(){

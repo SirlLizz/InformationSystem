@@ -1,12 +1,13 @@
-package com.example.client.model;
+package model;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 
 @XmlType(name = "customer")
 @XmlRootElement
-public class Customer{
+public class Customer implements Serializable {
     static private int nextID = 0;
 
     @XmlAttribute(name = "ID")

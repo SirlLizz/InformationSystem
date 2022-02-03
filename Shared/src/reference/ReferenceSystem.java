@@ -3,11 +3,12 @@ package reference;
 import model.Customer;
 import model.Order;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReferenceSystem{
+public class ReferenceSystem implements Serializable {
     private List<Customer> customers;
     private List<Order> orders;
 
@@ -63,9 +64,9 @@ public class ReferenceSystem{
     }
 
     public Customer getCustomerFromID(int customerID){
-        for (int i = 0; i<customers.size();i++){
-            if(customers.get(i).getCustomerID() == customerID){
-                return customers.get(i);
+        for (Customer customer : customers) {
+            if (customer.getCustomerID() == customerID) {
+                return customer;
             }
         }
         return null;
@@ -86,32 +87,36 @@ public class ReferenceSystem{
     }
 
     public void changeCustomerInformation(int customerID, String name, String phoneNumber, String address){
-        for(int i =0; i< customers.size();i++){
-            if(customers.get(i).getCustomerID() == customerID){
-                customers.get(i).setName(name);
-                customers.get(i).setPhoneNumber(phoneNumber);
-                customers.get(i).setAddress(address);
+        for (Customer customer : customers) {
+            if (customer.getCustomerID() == customerID) {
+                customer.setName(name);
+                customer.setPhoneNumber(phoneNumber);
+                customer.setAddress(address);
             }
         }
-
     }
 
     public String browseCustomerInformation(){
-        String out = "";
-        for(int i = 0; i<customers.size();i++){
-            out += customers.get(i).toString() + "\n";
+        StringBuilder out = new StringBuilder();
+        for (Customer customer : customers) {
+            out.append(customer.toString()).append("\n");
         }
-        return out;
+        return out.toString();
     }
 
     public void addOrder(Customer customer, LocalDate date, double orderPrice){
-        orders.add(new Order(customer, date, orderPrice));
+        if(checkCustomer(customer) == -1){
+            orders.add(new Order(customer, date, orderPrice));
+        }else{
+            System.out.println(getCustomerFromID(checkCustomer(customer)));
+            orders.add(new Order(customers.get(checkCustomer(customer)), date, orderPrice));
+        }
     }
 
     public Order getOrderFromID(int orderID){
-        for (int i = 0; i<orders.size();i++){
-            if(orders.get(i).getOrderID() == orderID){
-                return orders.get(i);
+        for (Order order : orders) {
+            if (order.getOrderID() == orderID) {
+                return order;
             }
         }
         return null;
@@ -126,17 +131,21 @@ public class ReferenceSystem{
     }
 
     public void changeOrderInformation(int orderID, Customer customer, LocalDate orderDate, double orderPrice){
-        orders.get(orderID).setCustomer(customer);
-        orders.get(orderID).setOrderDate(orderDate);
-        orders.get(orderID).setOrderPrice(orderPrice);
+        if(checkCustomer(customer) == -1){
+            getOrderFromID(orderID).setCustomer(customer);
+        }else{
+            getOrderFromID(orderID).setCustomer(customers.get(checkCustomer(customer)));
+        }
+        getOrderFromID(orderID).setOrderDate(orderDate);
+        getOrderFromID(orderID).setOrderPrice(orderPrice);
     }
 
     public String browseOrderInformation(){
-        String out = "";
-        for(int i = 0; i<orders.size();i++){
-            out += orders.get(i).toString() + "\n";
+        StringBuilder out = new StringBuilder();
+        for (Order order : orders) {
+            out.append(order.toString()).append("\n");
         }
-        return out;
+        return out.toString();
     }
     
 }

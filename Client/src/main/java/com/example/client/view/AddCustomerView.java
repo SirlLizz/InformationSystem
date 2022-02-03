@@ -1,21 +1,23 @@
 package com.example.client.view;
 
-import com.example.client.reference.ReferenceSystem;
-import com.example.client.transport.Request;
-import com.example.client.transport.Response;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import reference.ReferenceSystem;
+import transport.Request;
+import transport.Response;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.PropertyException;
+import javax.xml.bind.Unmarshaller;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 
 public class AddCustomerView {
 
@@ -31,13 +33,17 @@ public class AddCustomerView {
     private TextField address;
 
     private ReferenceSystem department;
+    private ObjectInputStream in;
     private ObjectOutputStream out;
     private Request request;
+    private Response response;
 
-    public AddCustomerView(ReferenceSystem department, ObjectOutputStream out, Request request){
+    public AddCustomerView(ReferenceSystem department, ObjectInputStream in, ObjectOutputStream out, Request request, Response response){
         this.department = department;
+        this.in = in;
         this.out = out;
         this.request = request;
+        this.response = response;
         stage = new Stage();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AddCustomer.fxml"));
@@ -63,9 +69,14 @@ public class AddCustomerView {
     protected void onAddCustomerButtonClick() {
         request.setCommand("/add/customer");
         request.setArgs(new String[]{fullName.getText(), telephone.getText(), address.getText()});
-
         try {
-            //out.writeObject(request);
+            out.reset();
+            out.writeObject(request);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /*
+        try{
             JAXBContext jaxbContext = JAXBContext.newInstance(Request.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -73,11 +84,26 @@ public class AddCustomerView {
             out.writeObject(null);
             out.flush();
             jaxbMarshaller.marshal(request, System.out);
-            System.out.println("OK");
-        } catch (JAXBException | IOException e) {
+        }catch (JAXBException | IOException e){
             e.printStackTrace();
         }
+         */
+        try{
+            response = (Response) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        /*
+        try{
+            JAXBContext jaxbInContext = JAXBContext.newInstance(Response.class);
+            Unmarshaller jaxbInUnmarshaller = jaxbInContext.createUnmarshaller();
+            response = ((Response) jaxbInUnmarshaller.unmarshal(in));
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+        */
+        department.setOrders(response.getDepartment().getOrders());
+        department.setCustomers(response.getDepartment().getCustomers());
         stage.close();
     }
-
 }

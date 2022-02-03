@@ -1,17 +1,22 @@
-package com.example.client.transport;
+package transport;
 
-import com.example.client.reference.ReferenceSystem;
+import reference.ReferenceSystem;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 
 @XmlType(name = "response")
 @XmlRootElement
-public class Response {
+public class Response implements Serializable {
 
     ReferenceSystem department;
 
     public Response() {
+    }
+
+    public Response(ReferenceSystem department) {
+        this.department = department;
     }
 
     public void setDepartment(ReferenceSystem department) {
@@ -22,7 +27,5 @@ public class Response {
         return department;
     }
 
-    public Response(ReferenceSystem department) {
-        this.department = department;
-    }
+
 }

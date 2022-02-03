@@ -1,11 +1,11 @@
 package com.example.client.controller;
 
-import com.example.client.reference.ReferenceSystem;
-import com.example.client.transport.Request;
-import com.example.client.transport.Response;
 import com.example.client.view.MenuView;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import reference.ReferenceSystem;
+import transport.Request;
+import transport.Response;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

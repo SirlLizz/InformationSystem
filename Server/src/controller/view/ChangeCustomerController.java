@@ -11,7 +11,7 @@ public class ChangeCustomerController {
         this.department = department;
     }
 
-    public void changeCustomerClick(ReferenceSystem department, int customerID, String fullName, String telephone, String address){
+    public void changeCustomerClick(int customerID, String fullName, String telephone, String address){
         department.changeCustomerInformation(customerID, fullName, telephone, address);
     }
 }

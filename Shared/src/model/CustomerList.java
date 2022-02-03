@@ -2,12 +2,13 @@ package model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @XmlType(name = "customerList")
 @XmlRootElement
-public class CustomerList {
+public class CustomerList implements Serializable{
     private List<Customer> customers;
 
     public CustomerList(){

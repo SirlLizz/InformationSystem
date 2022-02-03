@@ -1,14 +1,18 @@
 package com.example.client.view;
 
-import com.example.client.reference.ReferenceSystem;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import reference.ReferenceSystem;
+import transport.Request;
+import transport.Response;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class ChangeCustomerView {
 
@@ -23,11 +27,19 @@ public class ChangeCustomerView {
     @FXML
     private TextField address;
 
-    ReferenceSystem department;
-    int customerId;
+    private ReferenceSystem department;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
+    private Request request;
+    private Response response;
+    private int customerId;
 
-    public ChangeCustomerView(ReferenceSystem department, int customerID){
+    public ChangeCustomerView(ReferenceSystem department, ObjectInputStream in, ObjectOutputStream out, Request request, Response response, int customerID){
         this.department = department;
+        this.in = in;
+        this.out = out;
+        this.request = request;
+        this.response = response;
         this.customerId = customerID;
         stage = new Stage();
         try {
@@ -47,7 +59,7 @@ public class ChangeCustomerView {
     public void showStage() {
         stage.showAndWait();
     }
-/*
+
     @FXML
     private void initialize() {
         addCustomer.setOnAction(event -> onChangeCustomerButtonClick());
@@ -55,10 +67,23 @@ public class ChangeCustomerView {
 
     @FXML
     protected void onChangeCustomerButtonClick() {
-        controller.changeCustomerClick(department, customerId, fullName.getText(), telephone.getText(), address.getText());
+        request.setCommand("/change/customer");
+        request.setArgs(new String[]{String.valueOf(customerId), fullName.getText(), telephone.getText(), address.getText()});
+        try{
+            out.reset();
+            out.writeObject(request);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            response = (Response) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        department.setOrders(response.getDepartment().getOrders());
+        department.setCustomers(response.getDepartment().getCustomers());
         stage.close();
     }
 
-
- */
 }
