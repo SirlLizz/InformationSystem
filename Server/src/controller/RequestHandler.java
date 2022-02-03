@@ -6,11 +6,10 @@ import transport.Response;
 import controller.view.*;
 import reference.Find;
 import reference.ReferenceSystem;
-import com.example.client.reference.Serialization;
+import reference.Serialization;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.util.Arrays;
 
 public class RequestHandler {
     private Request request;

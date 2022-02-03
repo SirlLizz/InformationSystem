@@ -1,7 +1,5 @@
 package controller.view;
 
-
-
 import model.Customer;
 import model.Order;
 import reference.Find;
@@ -33,50 +31,12 @@ public class MenuController{
         this.changeOrderController = changeOrderController;
     }
 
-    public void addCustomerClick(){
-        /*
-        AddCustomerView addCust = new AddCustomerView(department, addCustomerController);
-        addCust.showStage();
-
-         */
-    }
-
     public void deleteCustomerClick(int customerID){
         department.removeCustomer(customerID);
     }
 
-    public void changeCustomerClick(int customerID){
-        /*
-        ChangeCustomerView changeCust = new ChangeCustomerView(department, customerID, changeCustomerController);
-        changeCust.showStage();
-
-         */
-    }
-
-    public void addOrderClick(){
-        /*
-
-        AddOrderView addOrd = new AddOrderView(department, addOrderController);
-        addOrd.showStage();
-
-         */
-    }
-
     public void deleteOrderClick(int orderID){
         department.removeOrder(orderID);
-    }
-
-    public void changeOrderClick(int orderID){
-        /*
-
-        ChangeOrderView changeOrd = new ChangeOrderView(department, orderID, changeOrderController);
-        changeOrd.showStage();
-
-         */
-    }
-
-    public void serializeOrder(File file) {
-        serialization.serializeOrder(department.getOrders(), file);
     }
 
     public void openOrder(File file){

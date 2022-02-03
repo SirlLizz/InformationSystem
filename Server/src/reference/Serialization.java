@@ -1,18 +1,15 @@
-package com.example.client.reference;
+package reference;
 
 import model.Customer;
 import model.CustomerList;
 import model.Order;
 import model.OrderList;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.*;
 import java.io.File;
 import java.util.List;
 
-public class Serialization {
+public class Serialization{
 
     public void serializeCustomer (List<Customer> list, File file){
         try{
