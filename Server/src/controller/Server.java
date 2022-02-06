@@ -1,17 +1,14 @@
 package controller;
 
-import transport.Request;
-import transport.Response;
-import reference.ReferenceSystem;
+import com.example.shared.reference.ReferenceSystem;
+import com.example.shared.transport.Request;
+import com.example.shared.transport.Response;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
-import java.util.Arrays;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 class Server extends Thread {
@@ -20,13 +17,11 @@ class Server extends Thread {
     private ObjectInputStream in;
     private int id;
     private RequestHandler requestHandler;
-    private ReferenceSystem department;
 
     public Server(Socket socket, int id) throws IOException {
         this.socket = socket;
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
-        department = new ReferenceSystem();
         requestHandler = new RequestHandler();
         this.id = id;
     }
@@ -37,32 +32,23 @@ class Server extends Thread {
             System.out.println("Client run " + id);
             while (!socket.isClosed()){
                 try {
-                    Request request = (Request) in.readObject();
-
-                    /*
+                    String rawRequest = (String)in.readObject();
                     JAXBContext jaxbInContext = JAXBContext.newInstance(Request.class);
                     Unmarshaller jaxbInUnmarshaller = jaxbInContext.createUnmarshaller();
-                    Request request = (Request)jaxbInUnmarshaller.unmarshal(in);
-                     */
+                    Request request = (Request)jaxbInUnmarshaller.unmarshal(new ByteArrayInputStream(rawRequest.getBytes()));
 
                     System.out.println("Client "+ id + " command: " + request.getCommand());
 
                     requestHandler.setRequest(request);
                     Response response = requestHandler.performRequest();
 
-                    out.writeObject(response);
-                    out.reset();
-
-                    /*
-                    JAXBContext jaxbOutContext = JAXBContext.newInstance(Response.class);
-                    Marshaller jaxbOutMarshaller = jaxbOutContext.createMarshaller();
-                    jaxbOutMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-                    jaxbOutMarshaller.marshal(response, System.out);
-                    jaxbOutMarshaller.marshal(response, out);
-                    out.writeObject(null);
+                    ByteArrayOutputStream responseInMemory = new ByteArrayOutputStream();
+                    JAXBContext jaxbContext = JAXBContext.newInstance(Response.class);
+                    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+                    jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+                    jaxbMarshaller.marshal(response, responseInMemory);
+                    out.writeObject(responseInMemory.toString());
                     out.flush();
-                     */
-
                 } catch (IOException e) {
                     System.out.println("Failed connection with " + id);
                     break;
