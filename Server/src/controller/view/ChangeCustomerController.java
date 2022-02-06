@@ -1,7 +1,7 @@
 package controller.view;
 
 
-import reference.ReferenceSystem;
+import com.example.shared.reference.ReferenceSystem;
 
 public class ChangeCustomerController {
 
@@ -11,7 +11,7 @@ public class ChangeCustomerController {
         this.department = department;
     }
 
-    public void changeCustomerClick(int customerID, String fullName, String telephone, String address){
+    public void changeCustomerClick(String customerID, String fullName, String telephone, String address){
         department.changeCustomerInformation(customerID, fullName, telephone, address);
     }
 }

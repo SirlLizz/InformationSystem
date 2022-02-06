@@ -1,6 +1,7 @@
 package reference;
 
-import model.Order;
+import com.example.shared.model.Order;
+import com.example.shared.reference.ReferenceSystem;
 
 import java.util.ArrayList;
 import java.util.List;

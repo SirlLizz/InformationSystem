@@ -1,20 +1,22 @@
 package com.example.client.view;
 
 
+import com.example.shared.model.Customer;
+import com.example.shared.reference.ReferenceSystem;
+import com.example.shared.transport.Request;
+import com.example.shared.transport.Response;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import model.Customer;
-import reference.ReferenceSystem;
-import transport.Request;
-import transport.Response;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,16 +35,14 @@ public class ChangeOrderView {
     @FXML
     private TextField price;
 
-    private ReferenceSystem department;
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private Request request;
     private Response response;
     private Customer customer = null;
-    int orderID;
+    String orderID;
 
-    public ChangeOrderView(ReferenceSystem department, ObjectInputStream in, ObjectOutputStream out, Request request, Response response, int orderID){
-        this.department = department;
+    public ChangeOrderView(ObjectInputStream in, ObjectOutputStream out, Request request, Response response, String orderID){
         this.in = in;
         this.out = out;
         this.request = request;
@@ -56,9 +56,11 @@ public class ChangeOrderView {
             stage.setTitle("Change Order");
             addOrder.setText("Change");
             addCustomer.setText("Change");
-            price.setText(Double.toString(department.getOrderFromID(orderID).getOrderPrice()));
-            date.setValue(department.getOrderFromID(orderID).getOrderDate());
-            customer = department.getOrderFromID(orderID).getCustomer();
+            request.setCommand("/get/reference");
+            serverDataExchange();
+            price.setText(Double.toString(response.getDepartment().getOrderFromID(orderID).getOrderPrice()));
+            date.setValue(response.getDepartment().getOrderFromID(orderID).getOrderDate());
+            customer = response.getDepartment().getOrderFromID(orderID).getCustomer();
             combo.setPromptText(customer.getName());
         } catch (IOException e) {
             e.printStackTrace();
@@ -80,21 +82,9 @@ public class ChangeOrderView {
     private void onChangeOrderButtonClick(){
         if(checkPriceToDouble(price.getText())){
             if(checkCustomer(customer)){
-                try {
-                    request.setCommand("/change/order");
-                    request.setArgs(new String[]{String.valueOf(orderID), customer.getName(), customer.getPhoneNumber(), customer.getAddress(), String.valueOf(date.getValue()), price.getText()});
-                    out.reset();
-                    out.writeObject(request);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try{
-                    response = (Response) in.readObject();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                department.setOrders(response.getDepartment().getOrders());
-                department.setCustomers(response.getDepartment().getCustomers());
+                request.setCommand("/change/order");
+                request.setArgs(new String[]{String.valueOf(orderID), customer.getName(), customer.getPhoneNumber(), customer.getAddress(), String.valueOf(date.getValue()), price.getText()});
+                serverDataExchange();
                 stage.close();
             }else{
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -113,22 +103,26 @@ public class ChangeOrderView {
     }
 
     private void onChangeCustomerClick(){
-        ChangeCustomerView changeCust = new ChangeCustomerView(department, in, out, request, response, customer.getCustomerID());
+        ChangeCustomerView changeCust = new ChangeCustomerView(in, out, request, response, customer.getCustomerID());
         changeCust.showStage();
     }
 
     private void onActionComboBox(){
-        for (int i = 0; i < department.getCustomers().size(); i++) {
-            if (department.getCustomers().get(i).getName().equals(combo.getValue())) {
-                customer = department.getCustomers().get(i);
+        request.setCommand("/get/reference");
+        serverDataExchange();
+        for (int i = 0; i < response.getDepartment().getCustomers().size(); i++) {
+            if (response.getDepartment().getCustomers().get(i).getName().equals(combo.getValue())) {
+                customer = response.getDepartment().getCustomers().get(i);
             }
         }
     }
 
     private void setComboBox(){
         List<String> names = new ArrayList<>();
-        for (int i = 0; i < department.getCustomers().size(); i++){
-            names.add(department.getCustomers().get(i).getName());
+        request.setCommand("/get/reference");
+        serverDataExchange();
+        for (int i = 0; i < response.getDepartment().getCustomers().size(); i++){
+            names.add(response.getDepartment().getCustomers().get(i).getName());
         }
         combo.setItems(FXCollections.observableArrayList(names));
     }
@@ -144,10 +138,36 @@ public class ChangeOrderView {
     }
 
     public boolean checkCustomer(Customer customer) {
-        if (customer != null && department.checkCustomer(customer)!=-1){
+        request.setCommand("/get/reference");
+        serverDataExchange();
+        if (customer != null && response.getDepartment().checkCustomer(customer)!=-1){
             return true;
         }
         return false;
+    }
+
+    private void serverDataExchange(){
+        try{
+            ByteArrayOutputStream requestInMemory = new ByteArrayOutputStream();
+            JAXBContext jaxbContext = JAXBContext.newInstance(Request.class);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            jaxbMarshaller.marshal(request, requestInMemory);
+
+            String respString = requestInMemory.toString();
+            out.writeObject(respString);
+            out.flush();
+        }catch (JAXBException | IOException e){
+            e.printStackTrace();
+        }
+        try{
+            String rawResponse = (String)in.readObject();
+            JAXBContext jaxbInContext = JAXBContext.newInstance(Response.class);
+            Unmarshaller jaxbInUnmarshaller = jaxbInContext.createUnmarshaller();
+            response.setDepartment(((Response)jaxbInUnmarshaller.unmarshal(new ByteArrayInputStream(rawResponse.getBytes()))).getDepartment());
+        } catch (JAXBException | IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 }

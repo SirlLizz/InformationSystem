@@ -1,12 +1,9 @@
 package controller.view;
 
-
-import model.Customer;
-import reference.ReferenceSystem;
+import com.example.shared.model.Customer;
+import com.example.shared.reference.ReferenceSystem;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ChangeOrderController {
 
@@ -18,7 +15,7 @@ public class ChangeOrderController {
         this.changeCustomerController = changeCustomerController;
     }
 
-    public void changeOrderClick(int orderID, Customer customer, LocalDate date, double price){
+    public void changeOrderClick(String orderID, Customer customer, LocalDate date, double price){
         department.changeOrderInformation(orderID, customer, date, price);
     }
 

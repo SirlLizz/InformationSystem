@@ -42,7 +42,7 @@
                   </Menu>
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Sort by ID">
+            <Menu mnemonicParsing="false" text="Sort by Name">
                <items>
                   <Menu mnemonicParsing="false" text="Order">
                      <items>

@@ -1,6 +1,10 @@
 package com.example.client.view;
 
 import com.example.client.reference.Serialization;
+import com.example.shared.model.Customer;
+import com.example.shared.model.Order;
+import com.example.shared.transport.Request;
+import com.example.shared.transport.Response;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,16 +14,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import model.Customer;
-import model.Order;
-import reference.ReferenceSystem;
-import transport.Request;
-import transport.Response;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -91,15 +90,13 @@ public class MenuView {
     @FXML
     private Button deleteOrderButton;
 
-    private ReferenceSystem department;
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private Request request;
     private Response response;
     private Serialization serialization = new Serialization();
 
-    public MenuView(ReferenceSystem department, ObjectInputStream in, ObjectOutputStream out, Request request, Response response) {
-        this.department = department;
+    public MenuView(ObjectInputStream in, ObjectOutputStream out, Request request, Response response) {
         this.in = in;
         this.out = out;
         this.request = request;
@@ -157,16 +154,16 @@ public class MenuView {
     }
 
     private void onAddCustomerClick(){
-        AddCustomerView addCust = new AddCustomerView(department, in, out, request, response);
+        AddCustomerView addCust = new AddCustomerView(in, out, request, response);
         addCust.showStage();
-        tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
+        tableCustomer.setItems(FXCollections.observableArrayList(response.getDepartment().getCustomers()));
     }
 
     private void onAddOrderClick(){
-        AddOrderView addOrd = new AddOrderView(department, in, out, request, response);
+        AddOrderView addOrd = new AddOrderView(in, out, request, response);
         addOrd.showStage();
-        tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
-        tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
+        tableOrder.setItems(FXCollections.observableArrayList(response.getDepartment().getOrders()));
+        tableCustomer.setItems(FXCollections.observableArrayList(response.getDepartment().getCustomers()));
     }
 
     private void onDeleteCustomerClick() {
@@ -175,19 +172,18 @@ public class MenuView {
             request.setCommand("/delete/customer");
             request.setArgs(new String[]{String.valueOf(selectionModel.getSelectedItem().getCustomerID())});
             serverDataExchange();
-            department = response.getDepartment();
-            tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
-            tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
+            tableCustomer.setItems(FXCollections.observableArrayList(response.getDepartment().getCustomers()));
+            tableOrder.setItems(FXCollections.observableArrayList(response.getDepartment().getOrders()));
         }
     }
 
     private void onChangeCustomerClick() {
         TableView.TableViewSelectionModel<Customer> selectionModel = tableCustomer.getSelectionModel();
         if(selectionModel.getSelectedItem()!=null){
-            ChangeCustomerView changeCust = new ChangeCustomerView(department, in, out, request, response, selectionModel.getSelectedItem().getCustomerID());
+            ChangeCustomerView changeCust = new ChangeCustomerView(in, out, request, response, selectionModel.getSelectedItem().getCustomerID());
             changeCust.showStage();
-            tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
-            tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
+            tableCustomer.setItems(FXCollections.observableArrayList(response.getDepartment().getCustomers()));
+            tableOrder.setItems(FXCollections.observableArrayList(response.getDepartment().getOrders()));
         }
     }
 
@@ -197,83 +193,88 @@ public class MenuView {
             request.setCommand("/delete/order");
             request.setArgs(new String[]{String.valueOf(selectionModel.getSelectedItem().getOrderID())});
             serverDataExchange();
-            department = response.getDepartment();
-            tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
+            tableOrder.setItems(FXCollections.observableArrayList(response.getDepartment().getOrders()));
         }
     }
 
     private void onChangeOrderClick() {
         TableView.TableViewSelectionModel<Order> selectionModel = tableOrder.getSelectionModel();
         if(selectionModel.getSelectedItem()!=null){
-            ChangeOrderView changeOrd = new ChangeOrderView(department, in, out, request, response, selectionModel.getSelectedItem().getOrderID());
+            ChangeOrderView changeOrd = new ChangeOrderView(in, out, request, response, selectionModel.getSelectedItem().getOrderID());
             changeOrd.showStage();
-            tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
-            tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
+            tableCustomer.setItems(FXCollections.observableArrayList(response.getDepartment().getCustomers()));
+            tableOrder.setItems(FXCollections.observableArrayList(response.getDepartment().getOrders()));
         }
     }
 
     private void onSerializeOrderClick(){
         File file = saveDialog("Serialized Order", "*.xml");
-        request.setCommand("/save/order");
+        request.setCommand("/get/reference");
         request.setArgs(new String[]{});
         serverDataExchange();
-        department = response.getDepartment();
         serialization.serializeOrder(response.getDepartment().getOrders(), file);
     }
 
     private void onOpenOrderClick() {
         File file = openDialog("Serialized Order", "*.xml");
         request.setCommand("/open/order");
-        /*
         List<Order> orders = serialization.deserializeOrder(file);
-        String[] requestArgs = new String[];
+        String[][] requestMatrixArgs = new String[orders.size()][];
         for (int i = 0; i< orders.size();i++){
-            requestArgs[i] = Arrays.toString(new String[]{orders.get(i).getCustomer().getName(), orders.get(i).getCustomer().getPhoneNumber(), orders.get(i).getCustomer().getAddress(), String.valueOf(orders.get(i).getOrderDate()), String.valueOf(orders.get(i).getOrderPrice())});
+            requestMatrixArgs[i] = new String[]{orders.get(i).getCustomer().getName(), orders.get(i).getCustomer().getPhoneNumber(), orders.get(i).getCustomer().getAddress(), String.valueOf(orders.get(i).getOrderDate()), String.valueOf(orders.get(i).getOrderPrice())};
         }
-        request.setArgs(requestArgs);
-        */
-        request.setArgs(new String[]{file.getAbsolutePath()});
+        request.setMatrixArgs(requestMatrixArgs);
         serverDataExchange();
-        department = response.getDepartment();
-        tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
-        tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
+        tableOrder.setItems(FXCollections.observableArrayList(response.getDepartment().getOrders()));
+        tableCustomer.setItems(FXCollections.observableArrayList(response.getDepartment().getCustomers()));
     }
 
     private void onAddOpenOrderClick() {
         File file = openDialog("Serialized Order", "*.xml");
         request.setCommand("/open/add/order");
-        request.setArgs(new String[]{file.getAbsolutePath()});
+        List<Order> orders = serialization.deserializeOrder(file);
+        String[][] requestMatrixArgs = new String[orders.size()][];
+        for (int i = 0; i< orders.size();i++){
+            requestMatrixArgs[i] = new String[]{orders.get(i).getCustomer().getName(), orders.get(i).getCustomer().getPhoneNumber(), orders.get(i).getCustomer().getAddress(), String.valueOf(orders.get(i).getOrderDate()), String.valueOf(orders.get(i).getOrderPrice())};
+        }
+        request.setMatrixArgs(requestMatrixArgs);
         serverDataExchange();
-        department = response.getDepartment();
-        tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
-        tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
+        tableOrder.setItems(FXCollections.observableArrayList(response.getDepartment().getOrders()));
+        tableCustomer.setItems(FXCollections.observableArrayList(response.getDepartment().getCustomers()));
     }
 
     private void onSerializeCustomerClick(){
         File file = saveDialog("Serialized Customer", "*.xml");
-        request.setCommand("/save/customer");
+        request.setCommand("/get/reference");
         request.setArgs(new String[]{});
         serverDataExchange();
-        department = response.getDepartment();
         serialization.serializeCustomer(response.getDepartment().getCustomers(), file);
     }
 
     private void onOpenCustomersClick() {
         File file = openDialog("Serialized Customer", "*.xml");
         request.setCommand("/open/customer");
-        request.setArgs(new String[]{file.getAbsolutePath()});
+        List<Customer> customers = serialization.deserializeCustomer(file);
+        String[][] requestMatrixArgs = new String[customers.size()][];
+        for (int i = 0; i< customers.size();i++){
+            requestMatrixArgs[i] = new String[]{customers.get(i).getName(), customers.get(i).getPhoneNumber(), customers.get(i).getAddress()};
+        }
+        request.setMatrixArgs(requestMatrixArgs);
         serverDataExchange();
-        department = response.getDepartment();
-        tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
+        tableCustomer.setItems(FXCollections.observableArrayList(response.getDepartment().getCustomers()));
     }
 
     private void onAddOpenCustomersClick() {
         File file = openDialog("Serialized Customer", "*.xml");
         request.setCommand("/open/add/customer");
-        request.setArgs(new String[]{file.getAbsolutePath()});
+        List<Customer> customers = serialization.deserializeCustomer(file);
+        String[][] requestMatrixArgs = new String[customers.size()][];
+        for (int i = 0; i< customers.size();i++){
+            requestMatrixArgs[i] = new String[]{customers.get(i).getName(), customers.get(i).getPhoneNumber(), customers.get(i).getAddress()};
+        }
+        request.setMatrixArgs(requestMatrixArgs);
         serverDataExchange();
-        department = response.getDepartment();
-        tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
+        tableCustomer.setItems(FXCollections.observableArrayList(response.getDepartment().getCustomers()));
     }
 
     private void onFindDateClick(){
@@ -320,29 +321,25 @@ public class MenuView {
     private void onSortCustomerToHigh() {
         request.setCommand("/sort/customer/high");
         serverDataExchange();
-        department = response.getDepartment();
-        tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
+        tableCustomer.setItems(FXCollections.observableArrayList(response.getDepartment().getCustomers()));
     }
 
     private void onSortCustomerToLow() {
         request.setCommand("/sort/customer/low");
         serverDataExchange();
-        department = response.getDepartment();
-        tableCustomer.setItems(FXCollections.observableArrayList(department.getCustomers()));
+        tableCustomer.setItems(FXCollections.observableArrayList(response.getDepartment().getCustomers()));
     }
 
     private void onSortOrderToHigh() {
         request.setCommand("/sort/order/high");
         serverDataExchange();
-        department = response.getDepartment();
-        tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
+        tableOrder.setItems(FXCollections.observableArrayList(response.getDepartment().getOrders()));
     }
 
     private void onSortOrderToLow() {
         request.setCommand("/sort/order/low");
         serverDataExchange();
-        department = response.getDepartment();
-        tableOrder.setItems(FXCollections.observableArrayList(department.getOrders()));
+        tableOrder.setItems(FXCollections.observableArrayList(response.getDepartment().getOrders()));
     }
 
     private String inputDialog(String name) {
@@ -369,15 +366,25 @@ public class MenuView {
     }
 
     private void serverDataExchange(){
-        try {
-            out.reset();
-            out.writeObject(request);
-        } catch (IOException e) {
+        try{
+            ByteArrayOutputStream requestInMemory = new ByteArrayOutputStream();
+            JAXBContext jaxbContext = JAXBContext.newInstance(Request.class);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            jaxbMarshaller.marshal(request, requestInMemory);
+
+            String respString = requestInMemory.toString();
+            out.writeObject(respString);
+            out.flush();
+        }catch (JAXBException | IOException e){
             e.printStackTrace();
         }
         try{
-            response = (Response) in.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+            String rawResponse = (String)in.readObject();
+            JAXBContext jaxbInContext = JAXBContext.newInstance(Response.class);
+            Unmarshaller jaxbInUnmarshaller = jaxbInContext.createUnmarshaller();
+            response.setDepartment(((Response)jaxbInUnmarshaller.unmarshal(new ByteArrayInputStream(rawResponse.getBytes()))).getDepartment());
+        } catch (JAXBException | IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -387,8 +394,8 @@ public class MenuView {
         alert.setTitle("FIND");
         alert.setHeaderText("Find in " + head + ":");
         StringBuilder out = new StringBuilder();
-        for(int i = 0; i<orders.size();i++){
-            out.append(orders.get(i).toString()).append("\n");
+        for (Order order : orders) {
+            out.append(order.toString()).append("\n");
         }
         VBox dialogPaneContent = new VBox();
         TextArea textArea = new TextArea();

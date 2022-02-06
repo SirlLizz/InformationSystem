@@ -1,22 +1,20 @@
 package com.example.client.view;
 
+import com.example.shared.reference.ReferenceSystem;
+import com.example.shared.transport.Request;
+import com.example.shared.transport.Response;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import reference.ReferenceSystem;
-import transport.Request;
-import transport.Response;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.Arrays;
 
 public class AddCustomerView {
@@ -32,14 +30,12 @@ public class AddCustomerView {
     @FXML
     private TextField address;
 
-    private ReferenceSystem department;
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private Request request;
     private Response response;
 
-    public AddCustomerView(ReferenceSystem department, ObjectInputStream in, ObjectOutputStream out, Request request, Response response){
-        this.department = department;
+    public AddCustomerView(ObjectInputStream in, ObjectOutputStream out, Request request, Response response){
         this.in = in;
         this.out = out;
         this.request = request;
@@ -66,44 +62,35 @@ public class AddCustomerView {
     }
 
     @FXML
-    protected void onAddCustomerButtonClick() {
+    private void onAddCustomerButtonClick() {
         request.setCommand("/add/customer");
         request.setArgs(new String[]{fullName.getText(), telephone.getText(), address.getText()});
-        try {
-            out.reset();
-            out.writeObject(request);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        /*
+        serverDataExchange();
+        stage.close();
+    }
+
+    private void serverDataExchange(){
         try{
+            ByteArrayOutputStream requestInMemory = new ByteArrayOutputStream();
             JAXBContext jaxbContext = JAXBContext.newInstance(Request.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            jaxbMarshaller.marshal(request, out);
-            out.writeObject(null);
+            jaxbMarshaller.marshal(request, requestInMemory);
+
+            String respString = requestInMemory.toString();
+            out.writeObject(respString);
             out.flush();
-            jaxbMarshaller.marshal(request, System.out);
         }catch (JAXBException | IOException e){
             e.printStackTrace();
         }
-         */
         try{
-            response = (Response) in.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        /*
-        try{
+            String rawResponse = (String)in.readObject();
             JAXBContext jaxbInContext = JAXBContext.newInstance(Response.class);
             Unmarshaller jaxbInUnmarshaller = jaxbInContext.createUnmarshaller();
-            response = ((Response) jaxbInUnmarshaller.unmarshal(in));
-        } catch (JAXBException e) {
+            response.setDepartment(((Response)jaxbInUnmarshaller.unmarshal(new ByteArrayInputStream(rawResponse.getBytes()))).getDepartment());
+        } catch (JAXBException | IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        */
-        department.setOrders(response.getDepartment().getOrders());
-        department.setCustomers(response.getDepartment().getCustomers());
-        stage.close();
     }
+
 }

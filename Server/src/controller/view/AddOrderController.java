@@ -1,8 +1,8 @@
 package controller.view;
 
 
-import model.Customer;
-import reference.ReferenceSystem;
+import com.example.shared.model.Customer;
+import com.example.shared.reference.ReferenceSystem;
 
 import java.time.LocalDate;
 

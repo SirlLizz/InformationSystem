@@ -1,7 +1,7 @@
 package controller.view;
 
 
-import reference.ReferenceSystem;
+import com.example.shared.reference.ReferenceSystem;
 
 public class AddCustomerController {
 

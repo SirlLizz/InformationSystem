@@ -1,10 +1,9 @@
 package com.example.client.reference;
 
-import model.Customer;
-import model.CustomerList;
-import model.Order;
-import model.OrderList;
-
+import com.example.shared.model.Customer;
+import com.example.shared.model.CustomerList;
+import com.example.shared.model.Order;
+import com.example.shared.model.OrderList;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;

@@ -9,5 +9,6 @@ public class Main {
         System.out.println("Server started!");
         ServerConnectionListener connectionListener = new ServerConnectionListener(new ServerSocket(PORT));
         connectionListener.start();
+
     }
 }

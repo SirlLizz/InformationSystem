@@ -1,14 +1,15 @@
-package reference;
+package com.example.shared.reference;
 
-import model.Customer;
-import model.Order;
-
+import com.example.shared.model.Customer;
+import com.example.shared.model.Order;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ReferenceSystem implements Serializable {
+
     private List<Customer> customers;
     private List<Order> orders;
 
@@ -63,20 +64,37 @@ public class ReferenceSystem implements Serializable {
         customers.add(new Customer(name, phoneNumber, address));
     }
 
-    public Customer getCustomerFromID(int customerID){
+    public void addOrder(Customer customer, LocalDate date, double orderPrice){
+        if(checkCustomer(customer) == -1){
+            orders.add(new Order(customer, date, orderPrice));
+        }else{
+            orders.add(new Order(customers.get(checkCustomer(customer)), date, orderPrice));
+        }
+    }
+
+    public Customer getCustomerFromID(String customerID){
         for (Customer customer : customers) {
-            if (customer.getCustomerID() == customerID) {
+            if (Objects.equals(customer.getCustomerID(), customerID)) {
                 return customer;
             }
         }
         return null;
     }
 
-    public void removeCustomer(int customerID){
+    public Order getOrderFromID(String orderID){
+        for (Order order : orders) {
+            if (Objects.equals(order.getOrderID(), orderID)) {
+                return order;
+            }
+        }
+        return null;
+    }
+
+    public void removeCustomer(String customerID){
         for(int i =0; i< customers.size();i++){
-            if(customers.get(i).getCustomerID() == customerID){
+            if(Objects.equals(customers.get(i).getCustomerID(), customerID)){
                 for(int j =0; j< orders.size();j++){
-                    if(orders.get(j).getCustomer().getCustomerID() == customerID){
+                    if(Objects.equals(orders.get(j).getCustomer().getCustomerID(), customerID)){
                         orders.remove(j);
                         j--;
                     }
@@ -86,14 +104,32 @@ public class ReferenceSystem implements Serializable {
         }
     }
 
-    public void changeCustomerInformation(int customerID, String name, String phoneNumber, String address){
+    public void removeOrder(String orderID){
+        for(int i =0; i< orders.size();i++){
+            if(Objects.equals(orders.get(i).getOrderID(), orderID)){
+                orders.remove(i);
+            }
+        }
+    }
+
+    public void changeCustomerInformation(String customerID, String name, String phoneNumber, String address){
         for (Customer customer : customers) {
-            if (customer.getCustomerID() == customerID) {
+            if (Objects.equals(customer.getCustomerID(), customerID)) {
                 customer.setName(name);
                 customer.setPhoneNumber(phoneNumber);
                 customer.setAddress(address);
             }
         }
+    }
+
+    public void changeOrderInformation(String orderID, Customer customer, LocalDate orderDate, double orderPrice){
+        if(checkCustomer(customer) == -1){
+            getOrderFromID(orderID).setCustomer(customer);
+        }else{
+            getOrderFromID(orderID).setCustomer(customers.get(checkCustomer(customer)));
+        }
+        getOrderFromID(orderID).setOrderDate(orderDate);
+        getOrderFromID(orderID).setOrderPrice(orderPrice);
     }
 
     public String browseCustomerInformation(){
@@ -102,42 +138,6 @@ public class ReferenceSystem implements Serializable {
             out.append(customer.toString()).append("\n");
         }
         return out.toString();
-    }
-
-    public void addOrder(Customer customer, LocalDate date, double orderPrice){
-        if(checkCustomer(customer) == -1){
-            orders.add(new Order(customer, date, orderPrice));
-        }else{
-            System.out.println(getCustomerFromID(checkCustomer(customer)));
-            orders.add(new Order(customers.get(checkCustomer(customer)), date, orderPrice));
-        }
-    }
-
-    public Order getOrderFromID(int orderID){
-        for (Order order : orders) {
-            if (order.getOrderID() == orderID) {
-                return order;
-            }
-        }
-        return null;
-    }
-
-    public void removeOrder(int orderID){
-        for(int i =0; i< orders.size();i++){
-            if(orders.get(i).getOrderID() == orderID){
-                orders.remove(i);
-            }
-        }
-    }
-
-    public void changeOrderInformation(int orderID, Customer customer, LocalDate orderDate, double orderPrice){
-        if(checkCustomer(customer) == -1){
-            getOrderFromID(orderID).setCustomer(customer);
-        }else{
-            getOrderFromID(orderID).setCustomer(customers.get(checkCustomer(customer)));
-        }
-        getOrderFromID(orderID).setOrderDate(orderDate);
-        getOrderFromID(orderID).setOrderPrice(orderPrice);
     }
 
     public String browseOrderInformation(){

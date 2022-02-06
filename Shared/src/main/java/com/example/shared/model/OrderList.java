@@ -1,4 +1,4 @@
-package model;
+package com.example.shared.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -9,6 +9,7 @@ import java.util.List;
 @XmlType(name = "orderList")
 @XmlRootElement
 public class OrderList implements Serializable {
+
     private List<Order> orders;
 
     public  OrderList(){

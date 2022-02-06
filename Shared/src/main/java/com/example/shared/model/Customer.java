@@ -1,30 +1,30 @@
-package model;
+package com.example.shared.model;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.UUID;
 
 @XmlType(name = "customer")
 @XmlRootElement
-public class Customer implements Serializable {
-    static private int nextID = 0;
+public class Customer implements Serializable, Comparable<Customer> {
 
     @XmlAttribute(name = "ID")
-    private final int customerID;
+    private final UUID customerID;
     private String name;
     private String phoneNumber;
     private String address;
 
     public Customer(){
-        this.customerID = 0;
+        this.customerID = UUID.randomUUID();
         this.address = null;
         this.name = null;
         this.phoneNumber = null;
     }
 
     public Customer(String name, String phoneNumber, String address){
-        customerID = nextID++;
+        customerID = UUID.randomUUID();
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.address = address;
@@ -54,16 +54,16 @@ public class Customer implements Serializable {
         address = newAddress;
     }
 
-    public int getCustomerID(){
-        return customerID;
-    }
-
-    public static void setNextID(int newID){
-        nextID = newID;
+    public String getCustomerID(){
+        return customerID.toString();
     }
 
     public String toString(){
         return "ID: " + customerID + "; Name: " + name + "; Phone: " + phoneNumber + "; Address: " + address;
     }
 
+    @Override
+    public int compareTo(Customer o) {
+        return name.compareTo(o.getName());
+    }
 }

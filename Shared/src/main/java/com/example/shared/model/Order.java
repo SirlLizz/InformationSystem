@@ -1,32 +1,33 @@
-package model;
+package com.example.shared.model;
 
-import reference.LocalDateAdapter;
-
+import com.example.shared.reference.LocalDateAdapter;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @XmlRootElement
 @XmlType(name = "order")
 public class Order implements Serializable{
-    static private int nextID = 0;
 
-    private final int orderID;
+    @XmlAttribute(name = "ID")
+    private final UUID orderID;
     private Customer customer;
     private LocalDate orderDate;
     private double orderPrice;
 
     public Order(){
-        this.orderID = 0;
+        this.orderID = UUID.randomUUID();
         this.customer = null;
         this.orderDate = null;
         this.orderPrice = 0;
     }
 
     public Order(Customer customer, LocalDate orderDate, double orderPrice){
-        this.orderID = nextID++;
+        this.orderID = UUID.randomUUID();
         this.customer = customer;
         this.orderDate = orderDate;
         this.orderPrice = orderPrice;
@@ -58,12 +59,8 @@ public class Order implements Serializable{
         orderPrice = newOrderPrice;
     }
 
-    public int getOrderID(){
-        return orderID;
-    }
-
-    public static void setNextID(int newID){
-        nextID = newID;
+    public String getOrderID(){
+        return orderID.toString();
     }
 
     public String toString(){

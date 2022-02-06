@@ -1,7 +1,6 @@
-package transport;
+package com.example.shared.transport;
 
-import reference.ReferenceSystem;
-
+import com.example.shared.reference.ReferenceSystem;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
@@ -26,6 +25,5 @@ public class Response implements Serializable {
     public ReferenceSystem getDepartment() {
         return department;
     }
-
 
 }

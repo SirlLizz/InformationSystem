@@ -1,4 +1,4 @@
-package transport;
+package com.example.shared.transport;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -10,6 +10,7 @@ public class Request implements Serializable {
 
     private String command;
     private String[] args;
+    private String[][] matrixArgs;
 
     public Request(){}
 
@@ -32,5 +33,13 @@ public class Request implements Serializable {
 
     public void setArgs(String[] args) {
         this.args = args;
+    }
+
+    public String[][] getMatrixArgs() {
+        return matrixArgs;
+    }
+
+    public void setMatrixArgs(String[][] matrixArgs) {
+        this.matrixArgs = matrixArgs;
     }
 }

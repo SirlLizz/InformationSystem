@@ -1,12 +1,12 @@
 package controller;
 
-import model.Customer;
-import transport.Request;
-import transport.Response;
+import com.example.shared.model.Customer;
+import com.example.shared.reference.ReferenceSystem;
+import com.example.shared.transport.Request;
+import com.example.shared.transport.Response;
 import controller.view.*;
-import reference.Find;
-import reference.ReferenceSystem;
-import reference.Serialization;
+import reference.*;
+
 
 import java.io.File;
 import java.time.LocalDate;
@@ -18,9 +18,8 @@ public class RequestHandler {
     //reference
     private ReferenceSystem department = new ReferenceSystem();
     private Find find = new Find(department);
-    private Serialization serialization = new Serialization();
 
-    //controller
+    //controller.view
     private MenuController menuController;
     private AddOrderController addOrderController;
     private AddCustomerController addCustomerController;
@@ -32,7 +31,7 @@ public class RequestHandler {
         addOrderController = new AddOrderController(department, addCustomerController);
         changeCustomerController = new ChangeCustomerController(department);
         changeOrderController = new ChangeOrderController(department, changeCustomerController);
-        menuController = new MenuController(department, serialization, find, addOrderController, addCustomerController, changeOrderController, changeCustomerController);
+        menuController = new MenuController(department, find, addOrderController, addCustomerController, changeOrderController, changeCustomerController);
     }
 
     public Request getRequest() {
@@ -54,38 +53,38 @@ public class RequestHandler {
                 response = new Response(department);
             }
             case "/delete/customer" -> {
-                menuController.deleteCustomerClick(Integer.parseInt(request.getArgs()[0]));
+                menuController.deleteCustomerClick(request.getArgs()[0]);
                 response = new Response(department);
             }
             case "/change/customer" -> {
-                changeCustomerController.changeCustomerClick(Integer.parseInt(request.getArgs()[0]), request.getArgs()[1], request.getArgs()[2], request.getArgs()[3]);
+                changeCustomerController.changeCustomerClick(request.getArgs()[0], request.getArgs()[1], request.getArgs()[2], request.getArgs()[3]);
                 response = new Response(department);
             }
             case "/delete/order" -> {
-                menuController.deleteOrderClick(Integer.parseInt(request.getArgs()[0]));
+                menuController.deleteOrderClick(request.getArgs()[0]);
                 response = new Response(department);
             }
             case "/change/order" -> {
-                changeOrderController.changeOrderClick(Integer.parseInt(request.getArgs()[0]), new Customer(request.getArgs()[1], request.getArgs()[2], request.getArgs()[3]), LocalDate.parse(request.getArgs()[4]), Double.parseDouble(request.getArgs()[5]));
+                changeOrderController.changeOrderClick(request.getArgs()[0], new Customer(request.getArgs()[1], request.getArgs()[2], request.getArgs()[3]), LocalDate.parse(request.getArgs()[4]), Double.parseDouble(request.getArgs()[5]));
                 response = new Response(department);
             }
-            case "/save/order", "/save/customer" -> {
+            case "/get/reference" -> {
                 response = new Response(department);
             }
             case "/open/order" -> {
-                menuController.openOrder(new File(request.getArgs()[0]));
+                menuController.openOrder(request.getMatrixArgs());
                 response = new Response(department);
             }
             case "/open/add/order" -> {
-                menuController.addOpenOrder(new File(request.getArgs()[0]));
+                menuController.addOpenOrder(request.getMatrixArgs());
                 response = new Response(department);
             }
             case "/open/customer" -> {
-                menuController.openCustomer(new File(request.getArgs()[0]));
+                menuController.openCustomer(request.getMatrixArgs());
                 response = new Response(department);
             }
             case "/open/add/customer" -> {
-                menuController.addOpenCustomer(new File(request.getArgs()[0]));
+                menuController.addOpenCustomer(request.getMatrixArgs());
                 response = new Response(department);
             }
             case "/find/date" -> {
